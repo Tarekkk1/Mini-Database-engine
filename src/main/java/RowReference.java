@@ -1,19 +1,35 @@
 package main.java;
 
-public class RowReference{
-    int pageNumber;
-    int indexInPage;
+import java.util.Vector;
+
+class PageAndRow {
+    int page;
+    int row;
+
+}
+
+public class RowReference {
+    Vector<PageAndRow> pageandrowlist;
     Object x;
     Object y;
     Object z;
-    
-    public RowReference(int pageNumber, int indexInPage, Object x, Object y, Object z) {
-        this.pageNumber = pageNumber;
-        this.indexInPage = indexInPage;
+
+    public RowReference(Object x, Object y, Object z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-   
+    public Object getX() {
+        return x;
+    }
+
+    public Object getY() {
+        return y;
+    }
+
+    public Object getZ() {
+        return z;
+    }
+
 }
