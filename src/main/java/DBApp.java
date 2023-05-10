@@ -149,9 +149,11 @@ public class DBApp implements DBAppInterface {
         try {
             return selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
         } catch (Exception e) {
-            throw new DBAppException("Error in select");
+            throw new DBAppException("Error in select");//comment
         }
 
     }
+
+
 
 }
