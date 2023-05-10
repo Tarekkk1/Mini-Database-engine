@@ -95,8 +95,8 @@ public class DBApp implements DBAppInterface {
                 metaData.append(colName).append(",");
                 metaData.append(colNameType.get(colName)).append(",");
                 metaData.append(colName.equals(clusteringKey) ? "True" : "False").append(",");
-                // metaData.append("False,");
-                // metaData.append("False,");
+                metaData.append("False,");
+                metaData.append("False,");
                 metaData.append(colNameMin.get(colName)).append(",");
                 metaData.append(colNameMax.get(colName));
                 metaData.append("\n");
@@ -153,7 +153,5 @@ public class DBApp implements DBAppInterface {
         }
 
     }
-
-
 
 }

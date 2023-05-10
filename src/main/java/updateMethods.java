@@ -211,20 +211,20 @@ public class updateMethods {
                 colDataType.put(curLineSplit[1], curLineSplit[2]);
                 switch (curLineSplit[2]) {
                     case "java.lang.Integer":
-                        columnMin.put(curLineSplit[1], Integer.parseInt(curLineSplit[4]));
-                        columnMax.put(curLineSplit[1], Integer.parseInt(curLineSplit[5]));
+                        columnMin.put(curLineSplit[1], Integer.parseInt(curLineSplit[6]));
+                        columnMax.put(curLineSplit[1], Integer.parseInt(curLineSplit[7]));
                         break;
                     case "java.lang.Double":
-                        columnMin.put(curLineSplit[1], Double.parseDouble(curLineSplit[4]));
-                        columnMax.put(curLineSplit[1], Double.parseDouble(curLineSplit[5]));
+                        columnMin.put(curLineSplit[1], Double.parseDouble(curLineSplit[6]));
+                        columnMax.put(curLineSplit[1], Double.parseDouble(curLineSplit[7]));
                         break;
                     case "java.util.Date":
-                        columnMin.put(curLineSplit[1], new SimpleDateFormat("yyyy-MM-dd").parse(curLineSplit[4]));
-                        columnMax.put(curLineSplit[1], new SimpleDateFormat("yyyy-MM-dd").parse(curLineSplit[5]));
+                        columnMin.put(curLineSplit[1], new SimpleDateFormat("yyyy-MM-dd").parse(curLineSplit[6]));
+                        columnMax.put(curLineSplit[1], new SimpleDateFormat("yyyy-MM-dd").parse(curLineSplit[7]));
                         break;
                     default:
-                        columnMin.put(curLineSplit[1], curLineSplit[4]);
-                        columnMax.put(curLineSplit[1], curLineSplit[5]);
+                        columnMin.put(curLineSplit[1], curLineSplit[6]);
+                        columnMax.put(curLineSplit[1], curLineSplit[7]);
                         break;
                 }
                 if (curLineSplit[3].equals("True")) {

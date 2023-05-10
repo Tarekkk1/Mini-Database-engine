@@ -155,6 +155,13 @@ public class insertMethods {
 
     }
 
+    public void updateIndex(String tableName) {
+        String indexPath = "src/main/resources/data/" + tableName + "index.ser";
+        File f = new File(indexPath);
+        f.delete();
+
+    }
+
     private static void insertRowTarek(Table table, Hashtable<String, Object> colNameValue, int index, int recordIndex)
             throws IOException, ClassNotFoundException, ParseException, DBAppException {
         String pagePath;
