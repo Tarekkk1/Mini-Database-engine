@@ -95,16 +95,38 @@ public class Node {
         }
     }
 
-    public void insert(RowReference point){
+    // public void insert(RowReference point){
+    //     if(isLeaf()){
+    //         points.add(point);
+    //         if(points.size()>maxPoints){
+    //             octSplit();
+    //         }
+    //     }
+    //     else{
+    //         int index = getChildNumber(point);
+    //         children.get(index).insert(point);
+    //     }
+    // }
+
+    public void insert(int row,int page, Object x,Object y,Object z){
         if(isLeaf()){
-            points.add(point);
-            if(points.size()>maxPoints){
-                octSplit();
+            RowReference exist = find(x, y, z);
+            if(exist==null){
+                RowReference point = new RowReference(x,y,z);
+                point.pageAndRow=new Vector<>();
+                point.pageAndRow.add(new PageAndRow(page,row));
+                points.add(point);
+                if(points.size()>maxPoints){
+                    octSplit();
+                }
+            }
+            else{
+                exist.pageAndRow.add(new PageAndRow(page, row));
             }
         }
         else{
-            int index = getChildNumber(point);
-            children.get(index).insert(point);
+            int index = getChildNumber(new RowReference(x, y, z));
+            children.get(index).insert(row, page, x, y, z);
         }
     }
 

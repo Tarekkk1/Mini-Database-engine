@@ -5,6 +5,9 @@ import java.util.Vector;
 class PageAndRow {
     int page;
     int row;
+    PageAndRow(int p, int r) {
+        page = p;
+        row = r;}
 
 }
 
