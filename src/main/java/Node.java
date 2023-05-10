@@ -120,6 +120,129 @@ public class Node {
             children.get(index).insert(point);
         }
     }
+
+    // public RowReference find(Object x,Object y,Object z){
+    //     if(isLeaf()){
+    //         for(int i=0;i<points.size();i++){
+    //             RowReference point = points.get(i);
+    //             if(updateMethods.check(point.x, x)==0 && updateMethods.check(point.y, y)==0 && updateMethods.check(point.z, z)==0){
+    //                 return point;
+    //             }
+    //         }
+    //         return null;
+    //     }
+    //     else{
+    //         int index = getChildNumber(new RowReference(0,0,x,y,z));
+    //         return children.get(index).find(x, y, z);
+    //     }
+    // }
+
+    public Vector<RowReference> find(Object minX,Object maxX,Object minY,Object maxY,Object minZ,Object maxZ){
+        Vector<RowReference> result = new Vector<RowReference>();
+        if(isLeaf()){
+            for(int i=0;i<points.size();i++){
+                RowReference point = points.get(i);
+                if(updateMethods.check(point.x, minX)>=0 && updateMethods.check(point.x, maxX)<=0 && updateMethods.check(point.y, minY)>=0 && updateMethods.check(point.y, maxY)<=0 && updateMethods.check(point.z, minZ)>=0 && updateMethods.check(point.z, maxZ)<=0){
+                    result.add(point);
+                }
+            }
+            return result;
+        }
+        else{
+            for(int i=0;i<children.size();i++){
+                Node child = children.get(i);
+                if(updateMethods.check(child.boundaries.minX, minX)>=0 && updateMethods.check(child.boundaries.maxX, maxX)<=0 && updateMethods.check(child.boundaries.minY, minY)>=0 && updateMethods.check(child.boundaries.maxY, maxY)<=0 && updateMethods.check(child.boundaries.minZ, minZ)>=0 && updateMethods.check(child.boundaries.maxZ, maxZ)<=0){
+                    result.addAll(child.find(minX, maxX, minY, maxY, minZ, maxZ));
+                }
+            }
+            return result;
+        }
+    }
+
+    public RowReference delete(Object minX,Object maxX,Object minY,Object maxY,Object minZ,Object maxZ){
+        if(isLeaf()){
+            for(int i=0;i<points.size();i++){
+                RowReference point = points.get(i);
+                if(updateMethods.check(point.x, minX)>=0 && updateMethods.check(point.x, maxX)<=0 && updateMethods.check(point.y, minY)>=0 && updateMethods.check(point.y, maxY)<=0 && updateMethods.check(point.z, minZ)>=0 && updateMethods.check(point.z, maxZ)<=0){
+                    points.remove(i);
+                    return point;
+                }
+            }
+            return null;
+        }
+        else{
+            for(int i=0;i<children.size();i++){
+                Node child = children.get(i);
+                if(updateMethods.check(child.boundaries.minX, minX)>=0 && updateMethods.check(child.boundaries.maxX, maxX)<=0 && updateMethods.check(child.boundaries.minY, minY)>=0 && updateMethods.check(child.boundaries.maxY, maxY)<=0 && updateMethods.check(child.boundaries.minZ, minZ)>=0 && updateMethods.check(child.boundaries.maxZ, maxZ)<=0){
+                    return child.delete(minX, maxX, minY, maxY, minZ, maxZ);
+                }
+            }
+            return null;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void print(){
+        if(isLeaf()){
+            System.out.println("Leaf");
+            for(int i=0;i<points.size();i++){
+                RowReference point = points.get(i);
+                System.out.println(point.x+" "+point.y+" "+point.z);
+            }
+        }
+        else{
+            System.out.println("Node");
+            for(int i=0;i<children.size();i++){
+                Node child = children.get(i);
+                child.print();
+            }
+        }
+    }
+
+    public void printBoundaries(){
+        System.out.println("minX: "+boundaries.minX+" maxX: "+boundaries.maxX+" minY: "+boundaries.minY+" maxY: "+boundaries.maxY+" minZ: "+boundaries.minZ+" maxZ: "+boundaries.maxZ);
+    }
+
+    public void printPoints(){
+        for(int i=0;i<points.size();i++){
+            RowReference point = points.get(i);
+            System.out.println(point.x+" "+point.y+" "+point.z);
+        }
+    }
+
+    public void printChildren(){
+        for(int i=0;i<children.size();i++){
+            Node child = children.get(i);
+            child.print();
+        }
+    }
+
+
     
 
     
