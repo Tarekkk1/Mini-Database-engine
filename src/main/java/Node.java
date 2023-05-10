@@ -121,21 +121,21 @@ public class Node {
         }
     }
 
-    // public RowReference find(Object x,Object y,Object z){
-    //     if(isLeaf()){
-    //         for(int i=0;i<points.size();i++){
-    //             RowReference point = points.get(i);
-    //             if(updateMethods.check(point.x, x)==0 && updateMethods.check(point.y, y)==0 && updateMethods.check(point.z, z)==0){
-    //                 return point;
-    //             }
-    //         }
-    //         return null;
-    //     }
-    //     else{
-    //         int index = getChildNumber(new RowReference(0,0,x,y,z));
-    //         return children.get(index).find(x, y, z);
-    //     }
-    // }
+    public RowReference find(Object x,Object y,Object z){
+        if(isLeaf()){
+            for(int i=0;i<points.size();i++){
+                RowReference point = points.get(i);
+                if(updateMethods.check(point.x, x)==0 && updateMethods.check(point.y, y)==0 && updateMethods.check(point.z, z)==0){
+                    return point;
+                }
+            }
+            return null;
+        }
+        else{
+            int index = getChildNumber(new RowReference(0,0,x,y,z));
+            return children.get(index).find(x, y, z);
+        }
+    }
 
     public Vector<RowReference> find(Object minX,Object maxX,Object minY,Object maxY,Object minZ,Object maxZ){
         Vector<RowReference> result = new Vector<RowReference>();
@@ -158,6 +158,10 @@ public class Node {
             return result;
         }
     }
+
+
+
+
 
     public RowReference delete(Object minX,Object maxX,Object minY,Object maxY,Object minZ,Object maxZ){
         if(isLeaf()){
