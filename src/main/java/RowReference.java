@@ -2,14 +2,17 @@ package main.java;
 
 import java.util.Vector;
 
-class pageandrow {
+class PageAndRow {
     int page;
     int row;
+    PageAndRow(int p, int r) {
+        page = p;
+        row = r;}
 
 }
 
 public class RowReference {
-    Vector<pageandrow> pageandrowlist;
+    Vector<PageAndRow> pageAndRow;
     Object x;
     Object y;
     Object z;

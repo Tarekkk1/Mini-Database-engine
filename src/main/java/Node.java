@@ -111,6 +111,56 @@ public class Node {
     }
 
     // public void insert(RowReference point){
+    //     if(isLeaf()){
+    //         points.add(point);
+    //         if(points.size()>maxPoints){
+    //             octSplit();
+    //         }
+    //     }
+    //     else{
+    //         int index = getChildNumber(point);
+    //         children.get(index).insert(point);
+    //     }
+    // }
+
+    public void insert(int row,int page, Object x,Object y,Object z){
+        if(isLeaf()){
+            RowReference exist = find(x, y, z);
+            if(exist==null){
+                RowReference point = new RowReference(x,y,z);
+                point.pageAndRow=new Vector<>();
+                point.pageAndRow.add(new PageAndRow(page,row));
+                points.add(point);
+                if(points.size()>maxPoints){
+                    octSplit();
+                }
+            }
+            else{
+                exist.pageAndRow.add(new PageAndRow(page, row));
+            }
+        }
+        else{
+            int index = getChildNumber(new RowReference(x, y, z));
+            children.get(index).insert(row, page, x, y, z);
+        }
+    }
+
+    public RowReference find(Object x,Object y,Object z){
+        if(isLeaf()){
+            for(int i=0;i<points.size();i++){
+                RowReference point = points.get(i);
+                if(updateMethods.check(point.x, x)==0 && updateMethods.check(point.y, y)==0 && updateMethods.check(point.z, z)==0){
+                    return point;
+                }
+            }
+            return null;
+        }
+        else{
+            int index = getChildNumber(new RowReference(x,y,z));
+            return children.get(index).find(x, y, z);
+        }
+    }
+    // public void insert(RowReference point){
     // if(isLeaf()){
     // points.add(point);
     // if(points.size()>maxPoints){
@@ -168,6 +218,11 @@ public class Node {
         }
     }
 
+
+
+
+
+
     public RowReference delete(Object minX, Object maxX, Object minY, Object maxY, Object minZ, Object maxZ) {
         if (isLeaf()) {
             for (int i = 0; i < points.size(); i++) {
@@ -195,6 +250,25 @@ public class Node {
             return null;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     public void print() {
         if (isLeaf()) {
