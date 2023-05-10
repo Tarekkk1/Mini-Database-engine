@@ -95,6 +95,21 @@ public class Node {
         }
     }
 
+    public void insert(Object x, Object y, Object z, pageandrow place) {
+        if (isLeaf()) {
+            RowReference point = new RowReference(x, y, z);
+            point.pageandrowlist.add(place);
+            points.add(point);
+            if (points.size() > maxPoints) {
+                octSplit();
+            }
+        } else {
+            int index = getChildNumber(new RowReference(x, y, z));
+            children.get(index).insert(x, y, z, place);
+        }
+
+    }
+
     // public void insert(RowReference point){
     // if(isLeaf()){
     // points.add(point);
