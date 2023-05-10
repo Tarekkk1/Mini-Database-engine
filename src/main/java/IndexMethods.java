@@ -1,20 +1,43 @@
 package main.java;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
 
 public class IndexMethods {
 
+    public static void updateMetadata(String tableName, String[] colStrings)
+            throws IOException, ParseException, DBAppException {
+        FileReader metadata = new FileReader("src/main/resources/metadata.csv");
+        BufferedReader br = new BufferedReader(metadata);
+        String tableIndex = colStrings[0] + colStrings[1] + colStrings[2] + "Index";
+        StringBuilder metaDatanew = new StringBuilder();
+
+        String curLine;
+        FileWriter metaDataFile = new FileWriter("src/main/resources/metadata.csv");
+
+        while ((curLine = br.readLine()) != null) {
+            String[] curLineSplit = curLine.split(",");
+            if (curLineSplit[0].equals(tableName)) {
+                curLineSplit[4] = tableIndex;
+                curLineSplit[5] = "Octree";
+            }
+            metaDatanew.append(curLine).append("\n");
+        }
+        metaDataFile.write(metaDatanew.toString());
+        metaDataFile.close();
+    }
+
     public static void createIndex(String strTableName, String[] ColName)
             throws DBAppException, ClassNotFoundException, IOException, ParseException {
-        // check if this index is previously created
-        // check colname.size==3
-        // check if colname is in the table
-        // create node(boundaries)
-        // insert table in tree
-        // serialize tree
+
+        // to check if the input is correct
 
         if (ColName.length != 3) {
             throw new DBAppException("Error in input");
@@ -23,6 +46,10 @@ public class IndexMethods {
         String path;
         path = "src/main/resources/data/" + strTableName + ".ser";
         Table table = updateMethods.getTablefromCSV(path);
+        table.index1 = ColName[0];
+        table.index2 = ColName[1];
+        table.index3 = ColName[2];
+        deleteFromMethods.writeIntoDiskMostafa(table, path);
         Object[] tableInfo = updateMethods.getTableInfoMeta(strTableName);
         Boundaries boundaries = new Boundaries();
 
@@ -52,6 +79,26 @@ public class IndexMethods {
 
         String indexPath = "src/main/resources/data/" + strTableName + "index.ser";
         deleteFromMethods.writeIntoDiskMostafa(root, indexPath);
+        updateMetadata(strTableName, ColName);
+    }
+
+    public static void updateIndex(String strTableName)
+            throws ClassNotFoundException, IOException, DBAppException, ParseException {
+        String path = "src/main/resources/data/" + strTableName + ".ser";
+        Table table = updateMethods.getTablefromCSV(path);
+        if (table.index1 != null) {
+            File f = new File("src/main/resources/data/" + strTableName + "index.ser");
+            f.delete();
+            String[] ColName = new String[] { table.index1, table.index2, table.index3 };
+            table.index1 = null;
+            table.index2 = null;
+            table.index3 = null;
+            deleteFromMethods.writeIntoDiskMostafa(table, path);
+
+            createIndex(strTableName, ColName);
+
+        }
+        return;
 
     }
 

@@ -50,6 +50,7 @@ public class updateMethods {
         objectOut.writeObject(page);
         objectOut.close();
         fileOut.close();
+        IndexMethods.updateIndex(tableName);
     }
 
     public static int checkTarek(Object clusteringObject1, Object clusteringObject2) {

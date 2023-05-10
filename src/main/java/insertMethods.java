@@ -42,6 +42,7 @@ public class insertMethods {
             insertRowTarek(table, colNameValue, pageAndRecord[0], pageAndRecord[1]);
 
         }
+        IndexMethods.updateIndex(tableName);
 
     }
 

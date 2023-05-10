@@ -84,6 +84,7 @@ public class deleteFromMethods {
 		}
 
 		helper(columnNameValue, clusteringCol, path, table, colMin);
+		IndexMethods.updateIndex(tableName);
 
 	}
 
@@ -218,6 +219,7 @@ public class deleteFromMethods {
 		{
 			throw new DBAppException("Record not found!");
 		}
+
 	}
 
 	private static boolean checkCommne(Hashtable<String, Object> hashtable, Hashtable<String, Object> columnNameValue) {
