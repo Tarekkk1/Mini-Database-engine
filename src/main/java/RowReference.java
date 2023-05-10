@@ -9,7 +9,7 @@ class PageAndRow {
 }
 
 public class RowReference {
-    Vector<PageAndRow> pageandrowlist;
+    Vector<PageAndRow> pageAndRow;
     Object x;
     Object y;
     Object z;
