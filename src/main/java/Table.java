@@ -71,6 +71,34 @@ public class Table implements Serializable {
         return pages;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String getClusteringKey() {
+        return clusteringKey;
+    }
+
+    public Vector<Hashtable<String, Object>> getRangeNumber() {
+        return RangeNumber;
+    }
+
+    public Hashtable<String, String> getColumnType() {
+        return ColumnType;
+    }
+
+    public Hashtable<String, String> getColumnMin() {
+        return ColumnMin;
+    }
+
+    public Hashtable<String, String> getColumnMax() {
+        return ColumnMax;
+    }
+
+    public Node getRoot() {
+        return root;
+    }
+
     public int getNumberofPages() {
         return pages.size();
     }

@@ -99,7 +99,7 @@ public class insertMethods {
 
     }
 
-    private static int[] readConfig() {
+    public static int[] readConfig() {
         Properties prop = new Properties();
         String filePath = "src/main/resources/DBApp.config";
         InputStream is = null;
@@ -115,6 +115,8 @@ public class insertMethods {
         }
         int[] arr = new int[2];
         arr[0] = Integer.parseInt(prop.getProperty("MaximumRowsCountinPage"));
+        arr[1] = Integer.parseInt(prop.getProperty("MaximumEntriesinOctreeNode"));
+
         return arr;
     }
 
