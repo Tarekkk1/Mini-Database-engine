@@ -8,6 +8,9 @@ public class Boundaries {
     Object maxY;
     Object minZ;
     Object maxZ;
+
+    public Boundaries() {
+    }
     
     
 }

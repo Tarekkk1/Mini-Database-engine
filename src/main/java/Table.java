@@ -19,6 +19,7 @@ public class Table implements Serializable {
     private Hashtable<String, String> ColumnMin;
     private Hashtable<String, String> ColumnMax;
     private Vector<Page> pages;
+    private Node root;
 
     public Table(String tableName, String clustringKey, Hashtable<String, String> colNameType,
             Hashtable<String, String> colNameMin, Hashtable<String, String> colNameMax) {

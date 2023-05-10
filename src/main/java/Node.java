@@ -8,23 +8,20 @@ public class Node {
     Vector<Node> children;
     Boundaries boundaries;
     Vector<RowReference> points;
+    int maxPoints;
 
     public Node(Boundaries b,int maxPoints){
         this.boundaries = b;
         this.children = new Vector<Node>(8);
         this.points = new Vector<RowReference>(maxPoints+1);
     }
+    
 
     public boolean isLeaf(){
         return children.isEmpty();
     }
 
     public void octSplit(){
-        //split points into 8 groups
-        //create 8 children
-        //assign boundaries to children
-        //assign points to children
-        //clear points
 
         for(int i=0;i<8;i++){
             Boundaries b = new Boundaries();
@@ -38,6 +35,54 @@ public class Node {
             children.add(child);
         }
 
+        for(int i=0;i<points.size();i++){
+            RowReference point = points.get(i);
+            int index = getChildNumber(point);
+            children.get(index).points.add(point);
+        }
+
+        points.clear();
+
+    }
+
+
+    private int getChildNumber(RowReference point) {
+        if(updateMethods.check(point.z, this.getMedian(boundaries.minZ, boundaries.maxZ))<=0){
+            if(updateMethods.check(point.y, this.getMedian(boundaries.minY, boundaries.maxY))<=0){
+                if(updateMethods.check(point.x, this.getMedian(boundaries.minX, boundaries.maxX))<=0){
+                    return 0;
+                }
+                else{
+                    return 1;
+                }
+            }
+            else{
+                if(updateMethods.check(point.x, this.getMedian(boundaries.minX, boundaries.maxX))<=0){
+                    return 2;
+                }
+                else{
+                    return 3;
+                }
+            }
+        }
+        else{
+            if(updateMethods.check(point.y, this.getMedian(boundaries.minY, boundaries.maxY))<=0){
+                if(updateMethods.check(point.x, this.getMedian(boundaries.minX, boundaries.maxX))<=0){
+                    return 4;
+                }
+                else{
+                    return 5;
+                }
+            }
+            else{
+                if(updateMethods.check(point.x, this.getMedian(boundaries.minX, boundaries.maxX))<=0){
+                    return 6;
+                }
+                else{
+                    return 7;
+                }
+            }
+        }
     }
 
     public Object getMedian(Object min,Object max){
@@ -60,6 +105,19 @@ public class Node {
         }
         else{
             return null;
+        }
+    }
+
+    public void insert(RowReference point){
+        if(isLeaf()){
+            points.add(point);
+            if(points.size()>maxPoints){
+                octSplit();
+            }
+        }
+        else{
+            int index = getChildNumber(point);
+            children.get(index).insert(point);
         }
     }
     
