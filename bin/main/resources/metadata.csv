@@ -1,0 +1,6 @@
+Teacher,gpa,java.lang.Integer,False,null,null,0,4
+Teacher,name,java.lang.String,False,null,null,A,ZZZZZZZZZZ
+Teacher,id,java.lang.Integer,True,null,null,0,1000
+Teacher,gpa,java.lang.Integer,False,null,null,0,4
+Teacher,name,java.lang.String,False,null,null,A,ZZZZZZZZZZ
+Teacher,id,java.lang.Integer,True,null,null,0,1000

@@ -1,9 +1,10 @@
 package main.java;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Vector;
 
-public class Node {
+public class Node implements Serializable {
 
     Vector<Node> children;
     Boundaries boundaries;
@@ -14,6 +15,8 @@ public class Node {
         this.boundaries = b;
         this.children = new Vector<Node>(8);
         this.points = new Vector<RowReference>(maxPoints + 1);
+        this.maxPoints = maxPoints;
+
     }
 
     public boolean isLeaf() {
@@ -82,17 +85,30 @@ public class Node {
         } else if (min instanceof Double) {
             return (Double) min + ((Double) max - (Double) min) / 2;
         } else if (min instanceof String) {
-            char c1 = ((String) min).charAt(0);
-            char c2 = ((String) max).charAt(0);
-            int ascii1 = (int) c1;
-            int ascii2 = (int) c2;
-            int middle = (ascii1 + ascii2) / 2;
-            return (char) middle;
+
+            return getMedianString((String) min, (String) max);
         } else if (min instanceof Date) {
             return new Date((((Date) min).getTime() + ((Date) max).getTime()) / 2);
         } else {
             return null;
         }
+    }
+
+    public static String getMedianString(String s1, String s2) {
+        int minLength = Math.min(s1.length(), s2.length());
+        StringBuilder result = new StringBuilder(minLength);
+        for (int i = 0; i < minLength; i++) {
+            char c1 = s1.charAt(i);
+            char c2 = s2.charAt(i);
+            char median = (char) ((c1 + c2) / 2);
+            result.append(median);
+        }
+        if (s1.length() > s2.length()) {
+            result.append(s1.substring(minLength));
+        } else if (s2.length() > s1.length()) {
+            result.append(s2.substring(minLength));
+        }
+        return result.toString();
     }
 
     public void insert(int row, int page, Object x, Object y, Object z) {
@@ -103,6 +119,7 @@ public class Node {
                 point.pageAndRow = new Vector<>();
                 point.pageAndRow.add(new PageAndRow(page, row));
                 points.add(point);
+                System.out.println("hello world");
                 if (points.size() > maxPoints) {
                     octSplit();
                 }

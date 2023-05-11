@@ -1,17 +1,20 @@
 package main.java;
 
+import java.io.Serializable;
 import java.util.Vector;
 
-class PageAndRow {
+class PageAndRow implements Serializable {
     int page;
     int row;
+
     PageAndRow(int p, int r) {
         page = p;
-        row = r;}
+        row = r;
+    }
 
 }
 
-public class RowReference {
+public class RowReference implements Serializable {
     Vector<PageAndRow> pageAndRow;
     Object x;
     Object y;

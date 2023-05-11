@@ -1,6 +1,8 @@
 package main.java;
 
-public class Boundaries {
+import java.io.Serializable;
+
+public class Boundaries implements Serializable {
 
     Object minX;
     Object maxX;
@@ -11,6 +13,5 @@ public class Boundaries {
 
     public Boundaries() {
     }
-    
-    
+
 }

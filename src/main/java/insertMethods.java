@@ -83,6 +83,8 @@ public class insertMethods {
 
         Object[] tableInfo = updateMethods.getTableInfoMeta(tableName); // info about table
         String clusteringCol = (String) tableInfo[4]; // clustering column name
+        System.out.println(colNameValue);
+
         if (!colNameValue.containsKey(clusteringCol)) {
             throw new DBAppException("No Clustering Key");
         }
@@ -229,18 +231,22 @@ public class insertMethods {
         String path;
         path = "src/main/resources/data/" + tableName + ".ser";
         Table table = updateMethods.getTablefromCSV(path);
-        if (table.index1 != null) {
-            Object x = colNameValue.get(table.index1);
-            Object y = colNameValue.get(table.index2);
-            Object z = colNameValue.get(table.index3);
-            if (x != null && y != null && z != null) {
-                String indexPath = "src/main/resources/data/" + tableName + "index.ser";
-                Node root = updateMethods.getNodefromCSV(indexPath);
-                root.insert(rowIndex, index, x, y, z);
-                insertMethods.writeIntoDisk(root, indexPath);
+        // if (table.index1 != null) {
+        // Object x = colNameValue.get(table.index1);
+        // Object y = colNameValue.get(table.index2);
+        // Object z = colNameValue.get(table.index3);
+        Object x = colNameValue.get("id");
+        Object y = colNameValue.get("gpa");
+        Object z = colNameValue.get("name");
+        // if (x != null && y != null && z != null) {
+        String indexPath = "src/main/resources/data/" + tableName + "index.ser";
+        Node root = updateMethods.getNodefromCSV(indexPath);
 
-            }
-        }
+        root.insert(rowIndex, index, x, y, z);
+        insertMethods.writeIntoDisk(root, indexPath);
+
+        // }
+        // }
 
     }
 
@@ -296,8 +302,8 @@ public class insertMethods {
                         throw new DBAppException("Error");
                     }
                     if (!(colNameValue.get(arr[1]) instanceof NullWrapper))
-                        if ((Integer) colNameValue.get(arr[1]) < (Integer) Integer.parseInt(arr[4])
-                                || (Integer) colNameValue.get(arr[1]) > (Integer) Integer.parseInt(arr[5])) {
+                        if ((Integer) colNameValue.get(arr[1]) < (Integer) Integer.parseInt(arr[6])
+                                || (Integer) colNameValue.get(arr[1]) > (Integer) Integer.parseInt(arr[7])) {
                             throw new DBAppException("Error");
                         }
 
@@ -309,8 +315,8 @@ public class insertMethods {
                         throw new DBAppException("Error");
                     }
                     if (!(colNameValue.get(arr[1]) instanceof NullWrapper))
-                        if ((Double) colNameValue.get(arr[1]) < (Double) Double.parseDouble(arr[4])
-                                || (Double) colNameValue.get(arr[1]) > (Double) Double.parseDouble(arr[5])) {
+                        if ((Double) colNameValue.get(arr[1]) < (Double) Double.parseDouble(arr[6])
+                                || (Double) colNameValue.get(arr[1]) > (Double) Double.parseDouble(arr[7])) {
                             throw new DBAppException("Error");
                         }
 
@@ -320,11 +326,11 @@ public class insertMethods {
                         throw new DBAppException("Error");
                     }
                     if (!(colNameValue.get(arr[1]) instanceof NullWrapper))
-                        if (((String) colNameValue.get(arr[1])).compareTo((String) arr[4]) < 0) {
+                        if (((String) colNameValue.get(arr[1])).compareTo((String) arr[6]) < 0) {
                             throw new DBAppException("Error");
                         }
                     if (!(colNameValue.get(arr[1]) instanceof NullWrapper))
-                        if (((String) colNameValue.get(arr[1])).compareTo((String) arr[5]) > 0) {
+                        if (((String) colNameValue.get(arr[1])).compareTo((String) arr[7]) > 0) {
 
                             throw new DBAppException("Error");
                         }
@@ -336,12 +342,12 @@ public class insertMethods {
                     } else {
                         if (!(colNameValue.get(arr[1]) instanceof NullWrapper))
                             if (((Date) colNameValue.get(arr[1]))
-                                    .compareTo(new SimpleDateFormat("yyyy-MM-dd").parse(arr[4])) < 0) {
+                                    .compareTo(new SimpleDateFormat("yyyy-MM-dd").parse(arr[6])) < 0) {
                                 throw new DBAppException("Error");
                             }
 
                             else if (((Date) colNameValue.get(arr[1]))
-                                    .compareTo(new SimpleDateFormat("yyyy-MM-dd").parse(arr[5])) > 0) {
+                                    .compareTo(new SimpleDateFormat("yyyy-MM-dd").parse(arr[7])) > 0) {
                                 throw new DBAppException("Error");
                             }
                     }

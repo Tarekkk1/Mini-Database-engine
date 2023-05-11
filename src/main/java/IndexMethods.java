@@ -28,8 +28,9 @@ public class IndexMethods {
                 curLineSplit[4] = tableIndex;
                 curLineSplit[5] = "Octree";
             }
-            metaDatanew.append(curLine).append("\n");
+            metaDatanew.append(curLineSplit.toString()).append("\n");
         }
+        System.out.println(metaDatanew.toString());
         metaDataFile.write(metaDatanew.toString());
         metaDataFile.close();
     }
@@ -79,7 +80,7 @@ public class IndexMethods {
 
         String indexPath = "src/main/resources/data/" + strTableName + "index.ser";
         deleteFromMethods.writeIntoDiskMostafa(root, indexPath);
-        updateMetadata(strTableName, ColName);
+        // updateMetadata(strTableName, ColName);
     }
 
     public static void updateIndex(String strTableName)

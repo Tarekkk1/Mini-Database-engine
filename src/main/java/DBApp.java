@@ -10,6 +10,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -110,16 +111,10 @@ public class DBApp implements DBAppInterface {
 
     @Override
     public void insertIntoTable(String tableName, Hashtable<String, Object> colNameValue)
-            throws DBAppException {
-        try
+            throws ClassNotFoundException, DBAppException, IOException, ParseException, Exception {
 
-        {
-            insertMethods.insertIntoTable(tableName, colNameValue);
-        } catch (
+        insertMethods.insertIntoTable(tableName, colNameValue);
 
-        Exception e) {
-            throw new DBAppException("Error in insert");
-        }
     }
 
     @Override
@@ -151,6 +146,104 @@ public class DBApp implements DBAppInterface {
         } catch (Exception e) {
             throw new DBAppException("Error in select");
         }
+
+    }
+
+    public static void createIndex(String strTableName, String[] ColName)
+            throws DBAppException, ClassNotFoundException, IOException, ParseException {
+        IndexMethods.createIndex(strTableName, ColName);
+    }
+
+    public static void main(String[] args) throws Exception {
+        DBApp dbApp = new DBApp();
+        // Hashtable<String, String> htblColNameType = new Hashtable<String, String>();
+        // htblColNameType.put("id", "java.lang.Integer");
+        // htblColNameType.put("name", "java.lang.String");
+        // // htblColNameType.put("date", "java.util.Date");
+        // htblColNameType.put("gpa", "java.lang.Integer");
+
+        // Hashtable<String, String> htblColNameMin = new Hashtable<String, String>();
+        // Hashtable<String, String> htblColNameMax = new Hashtable<String, String>();
+        // htblColNameMax.put("id", "1000");
+        // htblColNameMax.put("name", "ZZZZZZZZZZ");
+        // htblColNameMax.put("gpa", "4");
+        // // htblColNameMax.put("date", "2021-01-01");
+        // htblColNameMin.put("name", "A");
+        // // htblColNameMin.put("date", "2020-01-01");
+        // htblColNameMin.put("gpa", "0");
+        // htblColNameMin.put("id", "0");
+        // dbApp.createTable("Teacher", "id", htblColNameType, htblColNameMin,
+        // htblColNameMax);
+        /////////////////////////////
+
+        // createIndex("Teacher", new String[] { "id", "name", "gpa" });
+
+        // insertions
+        // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
+        // htblColNameValue.put("id", new Integer(10));
+        // htblColNameValue.put("name", new String("T3"));
+        // htblColNameValue.put("gpa", new Integer(2));
+
+        // // // htblColNameValue.put("date", new
+        // // // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
+        // dbApp.insertIntoTable("Teacher", htblColNameValue);
+
+        // // <1,2,3> page 0
+        // <4,5,6> page 1
+
+        FileInputStream fileIn = new FileInputStream("src/main/resources/data/Teacherindex.ser");
+        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+        Node v = (Node) objectIn.readObject();
+        objectIn.close();
+        fileIn.close();
+
+        System.out.println(v.points.size());
+        // search
+
+        // FileInputStream fileIn = new
+        // FileInputStream("src/main/resources/data/Teacher.ser");
+        // ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+        // Table v = (Table) objectIn.readObject();
+        // objectIn.close();
+        // fileIn.close();
+        // insertMethods.updateRange(v, "src/main/resources/data/Teacher0.ser");
+
+        // System.out.println(v.getPages().get(0).getMaxClustering());
+        // System.out.println(v.get(0).get("id"));
+
+        // delete
+        // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
+        // // htblColNameValue.put("id", new Integer(10));
+        // // htblColNameValue.put("name", new String("T10"));
+        // // htblColNameValue.put("gpa", new Double(0.8));
+        // htblColNameValue.put("date", new
+        // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
+
+        // dbApp.deleteFromTable("Teacher", htblColNameValue);
+
+        // when a record is deleted, values shift upwards leaving empty spaces in the
+        // page from the bottom
+        // value is re inserted in the correct place
+
+        // update
+        // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
+        // htblColNameValue.put("name", new String("T10"));
+        // // htblColNameValue.put("gpa", new Double(0.8));
+        // htblColNameValue.put("date", new
+        // SimpleDateFormat("yyyy-MM-dd").parse("2020-06-01"));
+
+        // dbApp.updateTable("Teacher", "10", htblColNameValue);
+
+        // // //select
+        // FileInputStream fileIn = new
+        // FileInputStream("src/main/resources/data/Teacher0.ser");
+        // ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+        // Vector<Hashtable<String, Object>> v = (Vector<Hashtable<String, Object>>)
+        // objectIn.readObject();
+        // objectIn.close();
+        // fileIn.close();
+
+        // System.out.println(v.get(0).get("date"));
 
     }
 
