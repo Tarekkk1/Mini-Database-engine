@@ -16,7 +16,7 @@ public class IndexMethods {
             throws IOException, ParseException, DBAppException {
         FileReader metadata = new FileReader("src/main/resources/metadata.csv");
         BufferedReader br = new BufferedReader(metadata);
-        String tableIndex = colStrings[0] + colStrings[1] + colStrings[2] + "Index";
+        String tableIndex = colStrings[0] +  colStrings[1] + colStrings[2] + " Index";
         StringBuilder metaDatanew = new StringBuilder();
 
         String curLine;
@@ -24,7 +24,9 @@ public class IndexMethods {
 
         while ((curLine = br.readLine()) != null) {
             String[] curLineSplit = curLine.split(",");
-            if (curLineSplit[0].equals(tableName)) {
+            if (curLineSplit[0].equals(tableName) && contains(colStrings,curLineSplit[1])) {
+                curLineSplit[6]=curLineSplit[4];
+                curLineSplit[7]=curLineSplit[5];
                 curLineSplit[4] = tableIndex;
                 curLineSplit[5] = "Octree";
             }
@@ -33,6 +35,16 @@ public class IndexMethods {
         System.out.println(metaDatanew.toString());
         metaDataFile.write(metaDatanew.toString());
         metaDataFile.close();
+    }
+
+    private static boolean contains(String[]a, String s){
+        for (String i : a){
+            if (i.equals(s)){
+                return true;
+            }
+        }
+        return false;
+
     }
 
     public static void createIndex(String strTableName, String[] ColName)
@@ -50,7 +62,7 @@ public class IndexMethods {
         table.index1 = ColName[0];
         table.index2 = ColName[1];
         table.index3 = ColName[2];
-        deleteFromMethods.writeIntoDiskMostafa(table, path);
+        deleteFromMethods.serialize(table, path);
         Object[] tableInfo = updateMethods.getTableInfoMeta(strTableName);
         Boundaries boundaries = new Boundaries();
 
@@ -79,8 +91,8 @@ public class IndexMethods {
         }
 
         String indexPath = "src/main/resources/data/" + strTableName + "index.ser";
-        deleteFromMethods.writeIntoDiskMostafa(root, indexPath);
-        // updateMetadata(strTableName, ColName);
+        deleteFromMethods.serialize(root, indexPath);
+        updateMetadata(strTableName, ColName);
     }
 
     public static void updateIndex(String strTableName)
@@ -94,7 +106,7 @@ public class IndexMethods {
             table.index1 = null;
             table.index2 = null;
             table.index3 = null;
-            deleteFromMethods.writeIntoDiskMostafa(table, path);
+            deleteFromMethods.serialize(table, path);
 
             createIndex(strTableName, ColName);
 

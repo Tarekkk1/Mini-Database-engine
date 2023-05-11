@@ -147,7 +147,7 @@ public class deleteFromMethods {
 					File newFile = new File(p.getPath());
 					newFile.delete();
 					p.setPath("src/main/resources/data/" + table.getTableName() + i + ".ser");
-					writeIntoDiskMostafa(v, p.getPath());
+					serialize(v, p.getPath());
 					insertMethods.writeIntoDisk(table, "src/main/resources/data/" + table.getTableName() + ".ser");
 				}
 
@@ -197,7 +197,7 @@ public class deleteFromMethods {
 						File newFile = new File(p.getPath());
 						newFile.delete();
 						p.setPath("src/main/resources/data" + table.getTableName() + k + ".ser");
-						writeIntoDiskMostafa(v, p.getPath());
+						serialize(v, p.getPath());
 						insertMethods.writeIntoDisk(table, "src/main/resources/data/" + table.getTableName() + ".ser");
 					}
 					i--;
@@ -235,7 +235,7 @@ public class deleteFromMethods {
 		return true;
 	}
 
-	static void writeIntoDiskMostafa(Object o, String path) throws IOException {
+	static void serialize(Object o, String path) throws IOException {
 
 		FileOutputStream tableRewrite = new FileOutputStream(path);
 		ObjectOutputStream out = new ObjectOutputStream(tableRewrite);
