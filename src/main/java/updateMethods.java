@@ -50,7 +50,10 @@ public class updateMethods {
         objectOut.writeObject(page);
         objectOut.close();
         fileOut.close();
-        IndexMethods.updateIndex(tableName);
+        // IndexMethods.updateIndex(tableName);
+        insertMethods.deleteIntoIndex(tableName, pageNumber, rowNumber, columnNameValue);
+        insertMethods.insertIntoIndex(tableName, pageNumber, rowNumber, columnNameValue);
+
     }
 
     public static int checkTarek(Object clusteringObject1, Object clusteringObject2) {
@@ -195,6 +198,15 @@ public class updateMethods {
         objectIn.close();
         fileIn.close();
         return (Table) table;
+    }
+
+    public static Node getNodefromCSV(String path) throws IOException, ClassNotFoundException {
+        FileInputStream fileIn = new FileInputStream(path);
+        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+        Object node = objectIn.readObject();
+        objectIn.close();
+        fileIn.close();
+        return (Node) node;
     }
 
     public static Object[] getTableInfoMeta(String tableName) throws IOException, ParseException, DBAppException {

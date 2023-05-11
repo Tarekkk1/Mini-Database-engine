@@ -160,6 +160,67 @@ public class Node {
     // }
     // }
 
+    public void updateRowrefrance(Object x, Object y, Object z, int oldPage, int oldRow, int newPage, int newRow) {
+        if (isLeaf()) {
+            for (int i = 0; i < points.size(); i++) {
+                RowReference point = points.get(i);
+                if (updateMethods.check(point.x, x) == 0 && updateMethods.check(point.y, y) == 0
+                        && updateMethods.check(point.z, z) == 0) {
+                    for (int j = 0; j < point.pageAndRow.size(); j++) {
+                        if (point.pageAndRow.get(j).page == oldPage && point.pageAndRow.get(j).row == oldRow) {
+                            point.pageAndRow.get(j).page = newPage;
+                            point.pageAndRow.get(j).row = newRow;
+                            return;
+                        }
+                    }
+                }
+            }
+        } else {
+            int index = getChildNumber(new RowReference(x, y, z));
+            children.get(index).updateRowrefrance(x, y, z, oldPage, oldRow, newPage, newRow);
+        }
+    }
+
+    public boolean RowrefranceChanged(Object x, Object y, Object z, int oldPage, int oldRow, int newPage, int newRow) {
+        if (isLeaf()) {
+            for (int i = 0; i < points.size(); i++) {
+                RowReference point = points.get(i);
+                if (updateMethods.check(point.x, x) == 0 && updateMethods.check(point.y, y) == 0
+                        && updateMethods.check(point.z, z) == 0) {
+                    for (int j = 0; j < point.pageAndRow.size(); j++) {
+                        if (point.pageAndRow.get(j).page == oldPage && point.pageAndRow.get(j).row == oldRow) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        } else {
+            int index = getChildNumber(new RowReference(x, y, z));
+            return children.get(index).RowrefranceChanged(x, y, z, oldPage, oldRow, newPage, newRow);
+        }
+    }
+
+    public void deleteRowrefrance(Object x, Object y, Object z, int oldPage, int oldRow) {
+        if (isLeaf()) {
+            for (int i = 0; i < points.size(); i++) {
+                RowReference point = points.get(i);
+                if (updateMethods.check(point.x, x) == 0 && updateMethods.check(point.y, y) == 0
+                        && updateMethods.check(point.z, z) == 0) {
+                    for (int j = 0; j < point.pageAndRow.size(); j++) {
+                        if (point.pageAndRow.get(j).page == oldPage && point.pageAndRow.get(j).row == oldRow) {
+                            point.pageAndRow.remove(j);
+                            return;
+                        }
+                    }
+                }
+            }
+        } else {
+            int index = getChildNumber(new RowReference(x, y, z));
+            children.get(index).deleteRowrefrance(x, y, z, oldPage, oldRow);
+        }
+    }
+
     public Vector<RowReference> find(Object minX, Object maxX, Object minY, Object maxY, Object minZ, Object maxZ) {
         Vector<RowReference> result = new Vector<RowReference>();
         if (isLeaf()) {
