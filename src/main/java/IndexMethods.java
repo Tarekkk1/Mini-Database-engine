@@ -16,7 +16,7 @@ public class IndexMethods {
             throws IOException, ParseException, DBAppException {
         FileReader metadata = new FileReader("src/main/resources/metadata.csv");
         BufferedReader br = new BufferedReader(metadata);
-        String tableIndex = colStrings[0] +  colStrings[1] + colStrings[2] + " Index";
+        String tableIndex = colStrings[0] +  colStrings[1] + colStrings[2] + "Index";
         StringBuilder metaDatanew = new StringBuilder();
 
         String curLine;
