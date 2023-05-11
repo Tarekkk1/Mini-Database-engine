@@ -25,8 +25,6 @@ public class IndexMethods {
         while ((curLine = br.readLine()) != null) {
             String[] curLineSplit = curLine.split(",");
             if (curLineSplit[0].equals(tableName) && contains(colStrings,curLineSplit[1])) {
-                curLineSplit[6]=curLineSplit[4];
-                curLineSplit[7]=curLineSplit[5];
                 curLineSplit[4] = tableIndex;
                 curLineSplit[5] = "Octree";
             }
