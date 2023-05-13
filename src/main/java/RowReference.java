@@ -5,11 +5,11 @@ import java.util.Vector;
 
 class PageAndRow implements Serializable {
     int page;
-    int row;
+    Object clustringvalue;
 
-    PageAndRow(int p, int r) {
+    PageAndRow(int p, Object clusteringObject) {
         page = p;
-        row = r;
+        this.clustringvalue = clusteringObject;
     }
 
 }

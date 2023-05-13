@@ -43,19 +43,10 @@ public class insertMethods {
         } else {
             int[] pageAndRecord = binarySearch(table, colNameValue);
             insertRowTarek(table, colNameValue, pageAndRecord[0], pageAndRecord[1]);
-            insertIntoIndex(tableName, pageAndRecord[0], pageAndRecord[1], colNameValue);
-
-            for (int i = pageAndRecord[0]; i < table.getPages().size(); i++) {
-
-                pagePath = "src/main/resources/data/" + tableName + i + ".ser";
-                Vector<Hashtable<String, Object>> records = updateMethods.getPagesfromCSV(pagePath);
-                for (int j = pageAndRecord[1]; j < records.size(); j++) {
-                    insertIntoIndex(tableName, index, index, records.get(j));
-
-                }
-            }
+            insertIntoIndex(tableName, pageAndRecord[0], colNameValue);
 
         }
+
         // IndexMethods.updateIndex(tableName); this will destroy an build the index
 
     }
@@ -182,7 +173,7 @@ public class insertMethods {
     private static void insertRowTarek(Table table, Hashtable<String, Object> colNameValue, int index, int recordIndex)
             throws IOException, ClassNotFoundException, ParseException, DBAppException {
 
-        deleteIntoIndex(table.getTableName(), index, recordIndex, colNameValue);
+        // deleteIntoIndex(table.getTableName(), index, recordIndex, colNameValue);
         String pagePath;
 
         if (index < table.getPages().size()) {
@@ -225,13 +216,17 @@ public class insertMethods {
 
     }
 
-    static void insertIntoIndex(String tableName, int index, int rowIndex,
+    static void insertIntoIndex(String tableName, int index,
             Hashtable<String, Object> colNameValue) throws ClassNotFoundException, IOException {
 
         String path;
         path = "src/main/resources/data/" + tableName + ".ser";
         Table table = updateMethods.getTablefromCSV(path);
-        // if (table.index1 != null) {
+
+        if (!IndexMethods.columnHasIndex(colNameValue, path))
+            return;
+
+        Object clustringvalue = colNameValue.get(table.getClusteringKey());
         // Object x = colNameValue.get(table.index1);
         // Object y = colNameValue.get(table.index2);
         // Object z = colNameValue.get(table.index3);
@@ -242,34 +237,54 @@ public class insertMethods {
         String indexPath = "src/main/resources/data/" + tableName + "index.ser";
         Node root = updateMethods.getNodefromCSV(indexPath);
 
-        root.insert(rowIndex, index, x, y, z);
+        root.insert(clustringvalue, index, x, y, z);
         insertMethods.writeIntoDisk(root, indexPath);
 
         // }
-        // }
 
     }
 
-    static void deleteIntoIndex(String tableName, int index, int rowIndex,
-            Hashtable<String, Object> colNameValue) throws ClassNotFoundException, IOException {
+    // static void deleteFromIndex(String tableName, int index,
+    // Hashtable<String, Object> colNameValue) {
+    // String path;
+    // path = "src/main/resources/data/" + tableName + ".ser";
+    // Table table = updateMethods.getTablefromCSV(path);
+    // if (!IndexMethods.columnHasIndex(colNameValue, path))
+    // return;
+    // Object x = colNameValue.get(table.index1);
+    // Object y = colNameValue.get(table.index2);
+    // Object z = colNameValue.get(table.index3);
+    // if (x != null && y != null && z != null) {
+    // String indexPath = "src/main/resources/data/" + tableName + "index.ser";
+    // Node root = updateMethods.getNodefromCSV(indexPath);
+    // root.
+    // insertMethods.writeIntoDisk(root, indexPath);
 
-        String path;
-        path = "src/main/resources/data/" + tableName + ".ser";
-        Table table = updateMethods.getTablefromCSV(path);
-        if (table.index1 != null) {
-            Object x = colNameValue.get(table.index1);
-            Object y = colNameValue.get(table.index2);
-            Object z = colNameValue.get(table.index3);
-            if (x != null && y != null && z != null) {
-                String indexPath = "src/main/resources/data/" + tableName + "index.ser";
-                Node root = updateMethods.getNodefromCSV(indexPath);
-                root.deleteRowrefrance(x, y, z, index, rowIndex);
-                insertMethods.writeIntoDisk(root, indexPath);
+    // }
 
-            }
-        }
+    // }
 
-    }
+    // static void deleteIntoIndex(String tableName, int index, int rowIndex,
+    // Hashtable<String, Object> colNameValue) throws ClassNotFoundException,
+    // IOException {
+
+    // String path;
+    // path = "src/main/resources/data/" + tableName + ".ser";
+    // Table table = updateMethods.getTablefromCSV(path);
+    // if (table.index1 != null) {
+    // Object x = colNameValue.get(table.index1);
+    // Object y = colNameValue.get(table.index2);
+    // Object z = colNameValue.get(table.index3);
+    // if (x != null && y != null && z != null) {
+    // String indexPath = "src/main/resources/data/" + tableName + "index.ser";
+    // Node root = updateMethods.getNodefromCSV(indexPath);
+    // root.deleteRowrefrance(x, y, z, index, rowIndex);
+    // insertMethods.writeIntoDisk(root, indexPath);
+
+    // }
+    // }
+
+    // }
 
     static void writeIntoDisk(Object o, String path) throws IOException {
 

@@ -16,7 +16,7 @@ public class IndexMethods {
             throws IOException, ParseException, DBAppException {
         FileReader metadata = new FileReader("src/main/resources/metadata.csv");
         BufferedReader br = new BufferedReader(metadata);
-        String tableIndex = colStrings[0] +  colStrings[1] + colStrings[2] + "Index";
+        String tableIndex = colStrings[0] + colStrings[1] + colStrings[2] + "Index";
         StringBuilder metaDatanew = new StringBuilder();
 
         String curLine;
@@ -24,7 +24,7 @@ public class IndexMethods {
 
         while ((curLine = br.readLine()) != null) {
             String[] curLineSplit = curLine.split(",");
-            if (curLineSplit[0].equals(tableName) && contains(colStrings,curLineSplit[1])) {
+            if (curLineSplit[0].equals(tableName) && contains(colStrings, curLineSplit[1])) {
                 curLineSplit[4] = tableIndex;
                 curLineSplit[5] = "Octree";
             }
@@ -35,9 +35,9 @@ public class IndexMethods {
         metaDataFile.close();
     }
 
-    private static boolean contains(String[]a, String s){
-        for (String i : a){
-            if (i.equals(s)){
+    private static boolean contains(String[] a, String s) {
+        for (String i : a) {
+            if (i.equals(s)) {
                 return true;
             }
         }
@@ -84,13 +84,28 @@ public class IndexMethods {
                 Object x = records.get(j).get(ColName[0]);
                 Object y = records.get(j).get(ColName[1]);
                 Object z = records.get(j).get(ColName[2]);
-                root.insert(j, i, x, y, z);
+                root.insert(records.get(j), i, x, y, z);
             }
         }
 
         String indexPath = "src/main/resources/data/" + strTableName + "index.ser";
         deleteFromMethods.serialize(root, indexPath);
         updateMetadata(strTableName, ColName);
+    }
+
+    public static boolean columnHasIndex(Hashtable<String, Object> colName, String tablePath)
+            throws ClassNotFoundException, IOException {
+
+        Table table = updateMethods.getTablefromCSV(tablePath);
+        if (table.index1 != null) {
+            if (colName.containsKey(table.index1) || colName.containsKey(table.index2)
+                    || colName.containsKey(table.index3)) {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
     public static void updateIndex(String strTableName)

@@ -111,25 +111,42 @@ public class Node implements Serializable {
         return result.toString();
     }
 
-    public void insert(int row, int page, Object x, Object y, Object z) {
+    public void insert(Object clustringvalue, int page, Object x, Object y, Object z) {
         if (isLeaf()) {
             RowReference exist = find(x, y, z);
             if (exist == null) {
                 RowReference point = new RowReference(x, y, z);
                 point.pageAndRow = new Vector<>();
-                point.pageAndRow.add(new PageAndRow(page, row));
+                point.pageAndRow.add(new PageAndRow(page, clustringvalue));
                 points.add(point);
                 System.out.println("hello world");
                 if (points.size() > maxPoints) {
                     octSplit();
                 }
             } else {
-                exist.pageAndRow.add(new PageAndRow(page, row));
+                exist.pageAndRow.add(new PageAndRow(page, clustringvalue));
             }
         } else {
             int index = getChildNumber(new RowReference(x, y, z));
-            children.get(index).insert(row, page, x, y, z);
+            children.get(index).insert(clustringvalue, page, x, y, z);
         }
+    }
+
+    public PageAndRow getpageAndRecord(Object minX, Object maxX, Object minY, Object maxY, Object minZ, Object maxZ,
+            Object clustringvalue) {
+        PageAndRow pageAndRow = null;
+        Vector<RowReference> rowReferences = this.find(minX, maxX, minY, maxY, minZ, maxZ);
+        for (int i = 0; i < rowReferences.size(); i++) {
+            RowReference rowReference = rowReferences.get(i);
+            for (int j = 0; j < rowReference.pageAndRow.size(); j++) {
+                if (rowReference.pageAndRow.get(j).clustringvalue.equals(clustringvalue)) {
+                    pageAndRow = rowReference.pageAndRow.get(j);
+                    break;
+                }
+            }
+        }
+
+        return pageAndRow;
     }
 
     public RowReference find(Object x, Object y, Object z) {
@@ -177,55 +194,41 @@ public class Node implements Serializable {
     // }
     // }
 
-    public void updateRowrefrance(Object x, Object y, Object z, int oldPage, int oldRow, int newPage, int newRow) {
-        if (isLeaf()) {
-            for (int i = 0; i < points.size(); i++) {
-                RowReference point = points.get(i);
-                if (updateMethods.check(point.x, x) == 0 && updateMethods.check(point.y, y) == 0
-                        && updateMethods.check(point.z, z) == 0) {
-                    for (int j = 0; j < point.pageAndRow.size(); j++) {
-                        if (point.pageAndRow.get(j).page == oldPage && point.pageAndRow.get(j).row == oldRow) {
-                            point.pageAndRow.get(j).page = newPage;
-                            point.pageAndRow.get(j).row = newRow;
-                            return;
-                        }
-                    }
-                }
-            }
-        } else {
-            int index = getChildNumber(new RowReference(x, y, z));
-            children.get(index).updateRowrefrance(x, y, z, oldPage, oldRow, newPage, newRow);
-        }
-    }
+    // public void updateRowrefrance(Object x, Object y, Object z, int oldPage,
+    // Object oldClustringcol, int newPage,
+    // Object clustringvalue) {
+    // if (isLeaf()) {
+    // for (int i = 0; i < points.size(); i++) {
+    // RowReference point = points.get(i);
+    // if (updateMethods.check(point.x, x) == 0 && updateMethods.check(point.y, y)
+    // == 0
+    // && updateMethods.check(point.z, z) == 0) {
+    // for (int j = 0; j < point.pageAndRow.size(); j++) {
+    // if (point.pageAndRow.get(j).page == oldPage
+    // && point.pageAndRow.get(j).clustringvalue == oldClustringcol) {
+    // point.pageAndRow.get(j).page = newPage;
+    // point.pageAndRow.get(j).clustringvalue = clustringvalue;
+    // return;
+    // }
+    // }
+    // }
+    // }
+    // } else {
+    // int index = getChildNumber(new RowReference(x, y, z));
+    // children.get(index).updateRowrefrance(x, y, z, oldPage, oldClustringcol,
+    // newPage, clustringvalue);
+    // }
+    // }
 
-    public boolean RowrefranceChanged(Object x, Object y, Object z, int oldPage, int oldRow, int newPage, int newRow) {
+    public void deleteRowrefrance(Object x, Object y, Object z, int oldPage, Object clustringvalue) {
         if (isLeaf()) {
             for (int i = 0; i < points.size(); i++) {
                 RowReference point = points.get(i);
                 if (updateMethods.check(point.x, x) == 0 && updateMethods.check(point.y, y) == 0
                         && updateMethods.check(point.z, z) == 0) {
                     for (int j = 0; j < point.pageAndRow.size(); j++) {
-                        if (point.pageAndRow.get(j).page == oldPage && point.pageAndRow.get(j).row == oldRow) {
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        } else {
-            int index = getChildNumber(new RowReference(x, y, z));
-            return children.get(index).RowrefranceChanged(x, y, z, oldPage, oldRow, newPage, newRow);
-        }
-    }
-
-    public void deleteRowrefrance(Object x, Object y, Object z, int oldPage, int oldRow) {
-        if (isLeaf()) {
-            for (int i = 0; i < points.size(); i++) {
-                RowReference point = points.get(i);
-                if (updateMethods.check(point.x, x) == 0 && updateMethods.check(point.y, y) == 0
-                        && updateMethods.check(point.z, z) == 0) {
-                    for (int j = 0; j < point.pageAndRow.size(); j++) {
-                        if (point.pageAndRow.get(j).page == oldPage && point.pageAndRow.get(j).row == oldRow) {
+                        if (point.pageAndRow.get(j).page == oldPage
+                                && updateMethods.check(point.pageAndRow.get(j).clustringvalue, clustringvalue) == 0) {
                             point.pageAndRow.remove(j);
                             return;
                         }
@@ -234,7 +237,7 @@ public class Node implements Serializable {
             }
         } else {
             int index = getChildNumber(new RowReference(x, y, z));
-            children.get(index).deleteRowrefrance(x, y, z, oldPage, oldRow);
+            children.get(index).deleteRowrefrance(x, y, z, oldPage, clustringvalue);
         }
     }
 

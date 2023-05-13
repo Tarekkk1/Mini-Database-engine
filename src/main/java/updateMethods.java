@@ -24,11 +24,20 @@ public class updateMethods {
         Object[] tableMetaDataInfo = getTableInfoMeta(tableName);
         String clusteringColumn = (String) tableMetaDataInfo[4];
         Object clusteringObject = tableMetaDataInfo[1];
+        int pageNumber;
 
-        int pageNumber = getPageTarek(table.getPages(), clusteringKeyValue);
+        // if (IndexMethods.columnHasIndex(columnNameValue, path)) {
+        // String indexPath = "src/main/resources/data/" + tableName + "index.ser";
+
+        // Node root = updateMethods.getNodefromCSV(indexPath);
+
+        // } else {
+
+        pageNumber = getPageTarek(table.getPages(), clusteringKeyValue);
         if (pageNumber == -1) {
             throw new DBAppException("error");
 
+            // }
         }
         String pagePath = table.getPages().get(pageNumber).getPath();
 
@@ -50,9 +59,11 @@ public class updateMethods {
         objectOut.writeObject(page);
         objectOut.close();
         fileOut.close();
-        // IndexMethods.updateIndex(tableName);
-        insertMethods.deleteIntoIndex(tableName, pageNumber, rowNumber, columnNameValue);
-        insertMethods.insertIntoIndex(tableName, pageNumber, rowNumber, columnNameValue);
+
+        // insertMethods.deleteIntoIndex(tableName, pageNumber, rowNumber,
+        // columnNameValue);
+        // insertMethods.insertIntoIndex(tableName, pageNumber,
+        // columnNameValue);
 
     }
 
