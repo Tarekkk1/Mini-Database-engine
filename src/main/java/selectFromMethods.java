@@ -8,35 +8,56 @@ import java.util.Iterator;
 import java.util.Vector;
 
 public class selectFromMethods {
+    public static boolean clumnIndex2(Vector<String> colNames, String tableName) {
+
+        // check if the column is indexed or not
+        return true;
+
+    }
+
     public static Iterator selectFromTable(SQLTerm[] arrSQLTerms, String[] strarrOperators)
             throws DBAppException, ClassNotFoundException, IOException {
         Vector<Hashtable<String, Object>> iterator = new Vector<>();
         validateSelectFromTable(arrSQLTerms, strarrOperators);
         String tableName = arrSQLTerms[0].get_strTableName();
-        Table table = extractTable("src/main/resources/data" + tableName + ".ser");
-        for (int i = 0; i < table.getPages().size(); i++) {
-            String path = table.getPages().get(i).getPath();
-            Vector<Hashtable<String, Object>> page = extractPage(path);
-            for (Hashtable<String, Object> row : page) {
-                Vector<Boolean> bool = selectHelper(arrSQLTerms, row);
-                Boolean b = bool.get(0);
-                for (int j = 1; j < bool.size(); j++) {
-                    switch (strarrOperators[j - 1]) {
-                        case "AND":
-                            b = b & bool.get(j);
-                            break;
-                        case "OR":
-                            b = b | bool.get(j);
-                            break;
-                        case "XOR":
-                            b = b ^ bool.get(j);
-                            break;
-                        default:
-                            throw new DBAppException("Wrong Operator!");
+        Table table = extractTable("src/main/resources/data/" + tableName + ".ser");
+        // her we will use the index if possible
+
+        Vector<String> vec = new Vector<>();
+        for (SQLTerm var : arrSQLTerms) {
+            vec.add(var.get_strColumnName());
+
+        }
+
+        if (clumnIndex2(vec, tableName)) {
+            // Impelement the index
+
+        } else {
+            for (int i = 0; i < table.getPages().size(); i++) {
+                String path = table.getPages().get(i).getPath();
+                Vector<Hashtable<String, Object>> page = extractPage(path);
+                for (Hashtable<String, Object> row : page) {
+
+                    Vector<Boolean> bool = selectHelper(arrSQLTerms, row);
+                    Boolean b = bool.get(0);
+                    for (int j = 1; j < bool.size(); j++) {
+                        switch (strarrOperators[j - 1]) {
+                            case "AND":
+                                b = b & bool.get(j);
+                                break;
+                            case "OR":
+                                b = b | bool.get(j);
+                                break;
+                            case "XOR":
+                                b = b ^ bool.get(j);
+                                break;
+                            default:
+                                throw new DBAppException("Wrong Operator!");
+                        }
                     }
-                }
-                if (b == true) {
-                    iterator.add(row);
+                    if (b == true) {
+                        iterator.add(row);
+                    }
                 }
             }
         }
@@ -44,7 +65,7 @@ public class selectFromMethods {
     }
 
     public static void validateSelectFromTable(SQLTerm[] arrSQLTerms, String[] strarrOperators) throws DBAppException {
-        if (arrSQLTerms.length <= strarrOperators.length)
+        if (arrSQLTerms.length - 1 != strarrOperators.length)
             throw new DBAppException("Number of terms and operators does not match.");
 
         for (String operator : strarrOperators)
@@ -84,6 +105,7 @@ public class selectFromMethods {
 
     public static Vector<Boolean> selectHelper(SQLTerm[] arrSQLTerms, Hashtable<String, Object> row)
             throws DBAppException {
+
         Vector<Boolean> bool = new Vector<Boolean>();
         for (SQLTerm sqlTerm : arrSQLTerms) {
             switch (sqlTerm._strOperator) {

@@ -2,9 +2,9 @@ package main.java;
 
 public class SQLTerm {
 
-    String _strTableName;
-    String _strColumnName;
-    String _strOperator;
+    String _strTableName; // table name
+    String _strColumnName; // column name
+    String _strOperator; // operator name
     Object _objValue;
 
     public SQLTerm(String _strTableName, String _strColumnName, String _strOperator, Object _objValue) {
