@@ -119,7 +119,7 @@ public class Node implements Serializable {
                 point.pageAndRow = new Vector<>();
                 point.pageAndRow.add(new PageAndRow(page, clustringvalue));
                 points.add(point);
-                System.out.println("hello world");
+
                 if (points.size() > maxPoints) {
                     octSplit();
                 }

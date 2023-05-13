@@ -179,26 +179,26 @@ public class DBApp implements DBAppInterface {
         // createIndex("Teacher", new String[] { "id", "name", "gpa" });
 
         // insertions
-        // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        // htblColNameValue.put("id", new Integer(14));
-        // htblColNameValue.put("name", new String("T3"));
-        // htblColNameValue.put("gpa", new Integer(2));
+        Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
+        htblColNameValue.put("id", new Integer(14));
+        htblColNameValue.put("name", new String("T3"));
+        htblColNameValue.put("gpa", new Integer(2));
 
-        // // htblColNameValue.put("date", new
-        // // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
-        // dbApp.insertIntoTable("Teacher", htblColNameValue);
+        // htblColNameValue.put("date", new
+        // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
+        dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // // <1,2,3> page 0
         // <4,5,6> page 1
 
-        // FileInputStream fileIn = new
-        // FileInputStream("src/main/resources/data/Teacherindex.ser");
-        // ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-        // Node v = (Node) objectIn.readObject();
-        // objectIn.close();
-        // fileIn.close();
+        FileInputStream fileIn = new
+        FileInputStream("src/main/resources/data/Teacherindex.ser");
+        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+        Node v = (Node) objectIn.readObject();
+        objectIn.close();
+        fileIn.close();
 
-        // System.out.println(v.points.size());
+        System.out.println(v.points.size());
         // search
 
         // FileInputStream fileIn = new

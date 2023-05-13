@@ -38,7 +38,9 @@ public class insertMethods {
         int index = table.getPages().size();
 
         if (index == 0) {
+
             pagePath = createPage(table, colNameValue, primaryKey, index);
+            insertIntoIndex(tableName, 0, colNameValue);
 
         } else {
             int[] pageAndRecord = binarySearch(table, colNameValue);
