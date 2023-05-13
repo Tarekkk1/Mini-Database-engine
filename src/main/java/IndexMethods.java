@@ -10,6 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.management.ObjectName;
+
 public class IndexMethods {
 
     public static void updateMetadata(String tableName, String[] colStrings)
@@ -61,6 +63,7 @@ public class IndexMethods {
         table.index2 = ColName[1];
         table.index3 = ColName[2];
         deleteFromMethods.serialize(table, path);
+
         Object[] tableInfo = updateMethods.getTableInfoMeta(strTableName);
         Boundaries boundaries = new Boundaries();
 
@@ -93,18 +96,25 @@ public class IndexMethods {
         updateMetadata(strTableName, ColName);
     }
 
-    public static boolean columnHasIndex(Hashtable<String, Object> colName, String tablePath)
+    public static Vector<Object> columnIndexs(Hashtable<String, Object> colName, String path)
             throws ClassNotFoundException, IOException {
 
-        Table table = updateMethods.getTablefromCSV(tablePath);
+        Table table = updateMethods.getTablefromCSV(path);
         if (table.index1 != null) {
             if (colName.containsKey(table.index1) || colName.containsKey(table.index2)
                     || colName.containsKey(table.index3)) {
-                return true;
+
+                Vector<Object> returned = new Vector<>();
+                returned.add(colName.get(table.index1));
+                returned.add(colName.get(table.index2));
+                returned.add(colName.get(table.index3));
+
+                return returned;
+
             }
         }
 
-        return false;
+        return null;
 
     }
 

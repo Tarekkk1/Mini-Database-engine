@@ -126,13 +126,23 @@ public class deleteFromMethods {
 			}
 			// check for matching data
 			flag = true;
+			Hashtable<String, Object> forIndex = page.get(rowNumber);
 			page.remove(rowNumber);
 			table.getPages().get(pageNumber)
 					.setNumberofRecords(table.getPages().get(pageNumber).getNumberofRecords() - 1);
 
 			insertMethods.writeIntoDisk(page, pagePath);
 			insertMethods.writeIntoDisk(table, "src/main/resources/data/" + table.getTableName() + ".ser");
+			if (forIndex != null && IndexMethods.columnIndexs(forIndex, path) != null) {
+				String nodePath = "src/main/resources/data/" + table.getName() + "index.ser";
+				Node root = updateMethods.getNodefromCSV(nodePath);
+				Vector<Object> v = IndexMethods.columnIndexs(forIndex, path);
 
+				root.deleteRowrefrance(v.get(0), v.get(1), v.get(2), pageNumber,
+						forIndex.get(table.getClusteringKey()));
+				deleteFromMethods.serialize(root, nodePath);
+
+			}
 			if (page.size() == 0) {
 				// you have to delete page
 				File f = new File(pagePath);
@@ -190,7 +200,7 @@ public class deleteFromMethods {
 					table.getPages().remove(i);
 
 					insertMethods.writeIntoDisk(table, "src/main/resources/data/" + table.getTableName() + ".ser");
-
+					IndexMethods.updateIndex(table.getTableName());
 					for (int k = 0; k < table.getPages().size(); k++) {
 						Page p = table.getPages().get(k);
 						Vector<Hashtable<String, Object>> v = updateMethods.getPagesfromCSV(p.getPath());

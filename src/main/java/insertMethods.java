@@ -47,8 +47,6 @@ public class insertMethods {
 
         }
 
-        // IndexMethods.updateIndex(tableName); this will destroy an build the index
-
     }
 
     private static void checkInsertion2(String tableName, Hashtable<String, Object> colNameValue)
@@ -208,6 +206,19 @@ public class insertMethods {
                 writeIntoDisk(records, pagePath);
 
                 updateRange(table, pagePath);
+                String tablePath = "src/main/resources/data/" + table.getTableName() + ".ser";
+                Vector<Object> values = IndexMethods.columnIndexs(temp, tablePath);
+
+                if (values != null) {
+
+                    Node root = updateMethods
+                            .getNodefromCSV("src/main/resources/data/" + table.getTableName() + "index.ser");
+                    root.updateRowrefrance(values.get(0), values.get(1), values.get(2),
+                            index, temp.get(table.getClusteringKey()), index + 1);
+                    deleteFromMethods.serialize(root, "src/main/resources/data/" + table.getTableName() + "index.ser");
+
+                }
+
                 insertRowTarek(table, temp, index + 1, 0);
             }
         } catch (Exception e) {
@@ -223,17 +234,14 @@ public class insertMethods {
         path = "src/main/resources/data/" + tableName + ".ser";
         Table table = updateMethods.getTablefromCSV(path);
 
-        if (!IndexMethods.columnHasIndex(colNameValue, path))
+        if (IndexMethods.columnIndexs(colNameValue, path) == null)
             return;
 
         Object clustringvalue = colNameValue.get(table.getClusteringKey());
-        // Object x = colNameValue.get(table.index1);
-        // Object y = colNameValue.get(table.index2);
-        // Object z = colNameValue.get(table.index3);
-        Object x = colNameValue.get("id");
-        Object y = colNameValue.get("gpa");
-        Object z = colNameValue.get("name");
-        // if (x != null && y != null && z != null) {
+        Object x = colNameValue.get(table.index1);
+        Object y = colNameValue.get(table.index2);
+        Object z = colNameValue.get(table.index3);
+
         String indexPath = "src/main/resources/data/" + tableName + "index.ser";
         Node root = updateMethods.getNodefromCSV(indexPath);
 

@@ -25,19 +25,11 @@ public class updateMethods {
         String clusteringColumn = (String) tableMetaDataInfo[4];
         Object clusteringObject = tableMetaDataInfo[1];
         int pageNumber;
-
-        // if (IndexMethods.columnHasIndex(columnNameValue, path)) {
-        // String indexPath = "src/main/resources/data/" + tableName + "index.ser";
-
-        // Node root = updateMethods.getNodefromCSV(indexPath);
-
-        // } else {
-
+        Hashtable<String, Object> forIndex = null;
         pageNumber = getPageTarek(table.getPages(), clusteringKeyValue);
         if (pageNumber == -1) {
             throw new DBAppException("error");
 
-            // }
         }
         String pagePath = table.getPages().get(pageNumber).getPath();
 
@@ -47,10 +39,14 @@ public class updateMethods {
         if (rowNumber == -1) {
             throw new DBAppException("error");
         }
+        forIndex = page.get(rowNumber);
+        Hashtable<String, Object> forIndex2 = null;
 
         for (String key : columnNameValue.keySet()) {
+
             page.get(rowNumber).replace(key, columnNameValue.get(key));
         }
+        forIndex2 = page.get(rowNumber);
         File f = new File(table.getPages().get(pageNumber).getPath());
         f.delete();
         String path2 = table.getPages().get(pageNumber).getPath();
@@ -59,11 +55,16 @@ public class updateMethods {
         objectOut.writeObject(page);
         objectOut.close();
         fileOut.close();
+        if (forIndex != null && IndexMethods.columnIndexs(forIndex, path) != null) {
+            String nodePath = "src/main/resources/data/" + tableName + "index.ser";
+            Node root = updateMethods.getNodefromCSV(nodePath);
+            Vector<Object> v = IndexMethods.columnIndexs(forIndex, path);
 
-        // insertMethods.deleteIntoIndex(tableName, pageNumber, rowNumber,
-        // columnNameValue);
-        // insertMethods.insertIntoIndex(tableName, pageNumber,
-        // columnNameValue);
+            root.deleteRowrefrance(v.get(0), v.get(1), v.get(2), pageNumber, forIndex.get(table.getClusteringKey()));
+            insertMethods.insertIntoIndex(tableName, pageNumber, forIndex2);
+            deleteFromMethods.serialize(root, nodePath);
+
+        }
 
     }
 
