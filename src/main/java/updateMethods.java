@@ -62,7 +62,6 @@ public class updateMethods {
 
             root.deleteRowrefrance(v.get(0), v.get(1), v.get(2), pageNumber, forIndex.get(table.getClusteringKey()));
             insertMethods.insertIntoIndex(tableName, pageNumber, forIndex2);
-            deleteFromMethods.serialize(root, nodePath);
 
         }
 

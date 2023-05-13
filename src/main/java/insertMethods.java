@@ -246,9 +246,7 @@ public class insertMethods {
         Node root = updateMethods.getNodefromCSV(indexPath);
 
         root.insert(clustringvalue, index, x, y, z);
-        insertMethods.writeIntoDisk(root, indexPath);
-
-        // }
+        deleteFromMethods.serialize(root, indexPath);
 
     }
 

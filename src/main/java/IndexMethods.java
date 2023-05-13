@@ -2,6 +2,7 @@ package main.java;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,27 +15,57 @@ import javax.management.ObjectName;
 
 public class IndexMethods {
 
-    public static void updateMetadata(String tableName, String[] colStrings)
-            throws IOException, ParseException, DBAppException {
-        FileReader metadata = new FileReader("src/main/resources/metadata.csv");
-        BufferedReader br = new BufferedReader(metadata);
-        String tableIndex = colStrings[0] + colStrings[1] + colStrings[2] + "Index";
-        StringBuilder metaDatanew = new StringBuilder();
+    public static void updateMetadata(String[] columns, String tableName) throws IOException {
+        String[] output = new String[6];
+        // try {
+        String file = "src/main/resources/metadata.csv";
+        FileReader reader = new FileReader(file);
+        BufferedReader buff = new BufferedReader(reader);
+        StringBuilder s = new StringBuilder();
+        String line = buff.readLine();
+        String indexName = columns[0] + "" + columns[1] + "" + columns[2] + "Index";
+        String indexType = "Octree";
+        FileWriter finalOne = new FileWriter("src/main/resources/metadata.csv");
 
-        String curLine;
-        FileWriter metaDataFile = new FileWriter("src/main/resources/metadata.csv");
+        do {
+            boolean inserted = false;
+            System.out.println(line);
 
-        while ((curLine = br.readLine()) != null) {
-            String[] curLineSplit = curLine.split(",");
-            if (curLineSplit[0].equals(tableName) && contains(colStrings, curLineSplit[1])) {
-                curLineSplit[4] = tableIndex;
-                curLineSplit[5] = "Octree";
+            String arr[] = line.split(",");
+            for (int i = 0; i < columns.length; i++) {
+
+                if (columns[i].equals(arr[1]) && arr[0].equals(tableName)) {
+                    s.append(arr[0]).append(",");
+                    s.append(arr[1]).append(",");
+                    s.append(arr[2]).append(",");
+                    s.append(arr[3]).append(",");
+                    s.append(indexName).append(",");
+                    s.append(indexType).append(",");
+                    s.append(arr[6]).append(",");
+                    s.append(arr[7]).append('\n');
+                    inserted = true;
+                    break;
+
+                }
+
             }
-            metaDatanew.append(curLineSplit.toString()).append("\n");
-        }
-        System.out.println(metaDatanew.toString());
-        metaDataFile.write(metaDatanew.toString());
-        metaDataFile.close();
+
+            if (!inserted) {
+                s.append(line).append('\n');
+
+            }
+
+        } while ((line = buff.readLine()) != null);
+
+        finalOne.write(s.toString());
+        finalOne.close();
+
+        // } catch (Exception e) {
+        // System.out.println("Couldn't open csv file");
+
+        // }
+        return;
+
     }
 
     private static boolean contains(String[] a, String s) {
@@ -93,7 +124,8 @@ public class IndexMethods {
 
         String indexPath = "src/main/resources/data/" + strTableName + "index.ser";
         deleteFromMethods.serialize(root, indexPath);
-        updateMetadata(strTableName, ColName);
+
+        updateMetadata(ColName, strTableName);
     }
 
     public static Vector<Object> columnIndexs(Hashtable<String, Object> colName, String path)
