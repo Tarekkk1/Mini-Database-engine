@@ -69,54 +69,55 @@ public class IndexMethods {
 
     }
 
-    // public static void updateMetadata(String[] columns, String tableName) throws IOException {
-    //     String[] output = new String[6];
-    //     // try {
-    //     String file = "src/main/resources/metadata.csv";
-    //     FileReader reader = new FileReader(file);
-    //     BufferedReader buff = new BufferedReader(reader);
-    //     StringBuilder s = new StringBuilder();
-    //     String line = "";
-    //     String indexName = columns[0] + "" + columns[1] + "" + columns[2] + "Index";
-    //     String indexType = "Octree";
-    //     FileWriter finalOne = new FileWriter("src/main/resources/metadata.csv");
+    // public static void updateMetadata(String[] columns, String tableName) throws
+    // IOException {
+    // String[] output = new String[6];
+    // // try {
+    // String file = "src/main/resources/metadata.csv";
+    // FileReader reader = new FileReader(file);
+    // BufferedReader buff = new BufferedReader(reader);
+    // StringBuilder s = new StringBuilder();
+    // String line = "";
+    // String indexName = columns[0] + "" + columns[1] + "" + columns[2] + "Index";
+    // String indexType = "Octree";
+    // FileWriter finalOne = new FileWriter("src/main/resources/metadata.csv");
 
-    //     do {
-    //         boolean inserted = false;
+    // do {
+    // boolean inserted = false;
 
-    //         String arr[] = line.split(",");
-    //         for (int i = 0; i < columns.length; i++) {
+    // String arr[] = line.split(",");
+    // for (int i = 0; i < columns.length; i++) {
 
-    //             if (columns[i].equals(arr[1]) && arr[0].equals(tableName)) {
-    //                 s.append(arr[0]).append(",");
-    //                 s.append(arr[1]).append(",");
-    //                 s.append(arr[2]).append(",");
-    //                 s.append(arr[3]).append(",");
-    //                 s.append(indexName).append(",");
-    //                 s.append(indexType).append(",");
-    //                 s.append(arr[6]).append(",");
-    //                 s.append(arr[7]).append('\n');
-    //                 inserted = true;
-    //                 break;
+    // if (columns[i].equals(arr[1]) && arr[0].equals(tableName)) {
+    // s.append(arr[0]).append(",");
+    // s.append(arr[1]).append(",");
+    // s.append(arr[2]).append(",");
+    // s.append(arr[3]).append(",");
+    // s.append(indexName).append(",");
+    // s.append(indexType).append(",");
+    // s.append(arr[6]).append(",");
+    // s.append(arr[7]).append('\n');
+    // inserted = true;
+    // break;
 
-    //             }
+    // }
 
-    //         }
+    // }
 
-    //         if (!inserted) {
-    //             s.append(line).append('\n');
+    // if (!inserted) {
+    // s.append(line).append('\n');
 
-    //         }
+    // }
 
-    //     } while ((line = buff.readLine()) != null);
-    //     finalOne.write(s.toString());
-    //     finalOne.close();
+    // } while ((line = buff.readLine()) != null);
+    // finalOne.write(s.toString());
+    // finalOne.close();
 
-    //     // } catch (Exception e) {
-    //     // System.out.println("Couldn't open csv file");
+    // // } catch (Exception e) {
+    // // System.out.println("Couldn't open csv file");
 
-    //     // }
-    //     return;
+    // // }
+    // return;
 
     // }
 
@@ -158,16 +159,11 @@ public class IndexMethods {
 
         Node root = new Node(boundaries, insertMethods.readConfig()[1]);
         Index index = new Index(root, ColName[0], ColName[1], ColName[2],
-<<<<<<< HEAD
-                "src/main/resources/data/" + table.getName() + ColName[1] + ColName[1] + ColName[2] + ".ser");
-        table.indexs.add(index);
-=======
                 "src/main/resources/data/" + table.getName() + ColName[0] + ColName[1] + ColName[2] + ".ser");
-                if (table.indexs == null) {
-                    table.indexs = new Vector<Index>();
-                }
-                table.indexs.add(index);
->>>>>>> e39313946fffb1a055a3faf15236f35d889f9202
+        if (table.indexs == null) {
+            table.indexs = new Vector<Index>();
+        }
+        table.indexs.add(index);
         deleteFromMethods.serialize(table, path);
 
         for (int i = 0; i < table.getPages().size(); i++) {
