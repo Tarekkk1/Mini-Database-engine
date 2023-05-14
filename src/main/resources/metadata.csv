@@ -1,0 +1,3 @@
+Teacher,gpa,java.lang.Integer,False,idnamegpaIndex,Octree,0,4
+Teacher,name,java.lang.String,False,idnamegpaIndex,Octree,A,ZZZZZZZZZZ
+Teacher,id,java.lang.Integer,True,idnamegpaIndex,Octree,0,1000
