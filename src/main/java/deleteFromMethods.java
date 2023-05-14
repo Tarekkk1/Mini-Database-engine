@@ -1,5 +1,6 @@
 package main.java;
 
+import java.beans.IndexedPropertyDescriptor;
 import java.beans.Transient;
 import java.io.BufferedReader;
 import java.io.File;
@@ -102,7 +103,80 @@ public class deleteFromMethods {
 		boolean isCluster = columnNameValue.get(clusteringCol) != null; // true
 
 		boolean flag = false;
-		if (isCluster) {
+		int numberIndex = insertMethods.returnIndex("src/main/resources/data/" + table.getTableName() + ".ser",
+				columnNameValue);
+
+		if (numberIndex != -1) {
+			Index index = table.indexs.get(numberIndex);
+			Node root = updateMethods.getNodefromDisk(index.path);
+			Object x = columnNameValue.get(index.index1);
+			Object y = columnNameValue.get(index.index2);
+			Object z = columnNameValue.get(index.index3);
+			RowReference refrances = root.find(x, y, z);
+			Vector<Hashtable<String, Object>> rows = new Vector<>();
+
+			for (PageAndRow single : refrances.pageAndRow) {
+				int pageNumber = single.page;
+				Object cluster = single.clustringvalue;
+
+				String pagePath = table.getPages().get(pageNumber).getPath(); // page path
+				Vector<Hashtable<String, Object>> page = updateMethods.getPagesfromCSV(pagePath);
+				int rowNumber = updateMethods.getRowTarek(page, clusteringCol, cluster); // to
+																							// be
+				if (!checkCommne(page.get(rowNumber),
+						columnNameValue)) {
+					throw new DBAppException("Data not found");
+				}
+
+				if (rowNumber == -1) {
+					throw new DBAppException("No row Found");
+				}
+				// check for matching data
+				flag = true;
+				Hashtable<String, Object> forIndex = page.get(rowNumber);
+				page.remove(rowNumber);
+				table.getPages().get(pageNumber)
+						.setNumberofRecords(table.getPages().get(pageNumber).getNumberofRecords() - 1);
+
+				insertMethods.writeIntoDisk(page, pagePath);
+				insertMethods.writeIntoDisk(table, "src/main/resources/data/" + table.getTableName() + ".ser");
+				if (forIndex != null && IndexMethods.columnIndexs(forIndex, path) != null) {
+					int number = insertMethods.returnIndex("src/main/resources/data/" + table.getName() + ".ser",
+							forIndex);
+					Index index1 = table.indexs.get(number);
+
+					String nodePath = index1.path;
+					Node root1 = updateMethods.getNodefromDisk(nodePath);
+					Vector<Object> v = IndexMethods.columnIndexs(forIndex, path);
+
+					root.deleteRowrefrance(v.get(0), v.get(1), v.get(2), pageNumber,
+							forIndex.get(table.getClusteringKey()));
+					deleteFromMethods.serialize(root1, nodePath);
+
+				}
+				if (page.size() == 0) {
+					// you have to delete page
+					File f = new File(pagePath);
+					f.delete();
+					table.getPages().remove(pageNumber);
+
+					insertMethods.writeIntoDisk(table, "src/main/resources/data/" + table.getTableName() + ".ser");
+
+					for (int i = 0; i < table.getPages().size(); i++) {
+						Page p = table.getPages().get(i);
+						Vector<Hashtable<String, Object>> v = updateMethods.getPagesfromCSV(p.getPath());
+						File newFile = new File(p.getPath());
+						newFile.delete();
+						p.setPath("src/main/resources/data/" + table.getTableName() + i + ".ser");
+						serialize(v, p.getPath());
+						insertMethods.writeIntoDisk(table, "src/main/resources/data/" + table.getTableName() + ".ser");
+					}
+
+				}
+			}
+		}
+
+		else if (isCluster) {
 			// binary search for the clustering key
 			int pageNumber = updateMethods.getPageTarek(table.getPages(), columnNameValue.get(clusteringCol));
 			if (pageNumber == -1) {
@@ -115,7 +189,8 @@ public class deleteFromMethods {
 
 			String pagePath = table.getPages().get(pageNumber).getPath(); // page path
 			Vector<Hashtable<String, Object>> page = updateMethods.getPagesfromCSV(pagePath);
-			int rowNumber = updateMethods.getRowTarek(page, clusteringCol, columnNameValue.get(clusteringCol)); // to be
+			int rowNumber = updateMethods.getRowTarek(page, clusteringCol, columnNameValue.get(clusteringCol)); // to
+																												// be
 			if (!checkCommne(page.get(rowNumber),
 					columnNameValue)) {
 				throw new DBAppException("Data not found");
@@ -134,7 +209,11 @@ public class deleteFromMethods {
 			insertMethods.writeIntoDisk(page, pagePath);
 			insertMethods.writeIntoDisk(table, "src/main/resources/data/" + table.getTableName() + ".ser");
 			if (forIndex != null && IndexMethods.columnIndexs(forIndex, path) != null) {
-				String nodePath = "src/main/resources/data/" + table.getName() + "index.ser";
+				int number = insertMethods.returnIndex("src/main/resources/data/" + table.getName() + ".ser",
+						forIndex);
+				Index index = table.indexs.get(number);
+
+				String nodePath = index.path;
 				Node root = updateMethods.getNodefromDisk(nodePath);
 				Vector<Object> v = IndexMethods.columnIndexs(forIndex, path);
 
@@ -177,7 +256,8 @@ public class deleteFromMethods {
 					Hashtable<String, Object> row = page.get(j);
 					for (String key : columnNameValue.keySet()) {// every Column
 
-						if (compare(row.get(key), columnNameValue.get(key)) == 0 && checkCommne(row, columnNameValue)) {
+						if (compare(row.get(key), columnNameValue.get(key)) == 0
+								&& checkCommne(row, columnNameValue)) {
 							flag = true;
 							page.remove(j);
 
@@ -208,7 +288,8 @@ public class deleteFromMethods {
 						newFile.delete();
 						p.setPath("src/main/resources/data" + table.getTableName() + k + ".ser");
 						serialize(v, p.getPath());
-						insertMethods.writeIntoDisk(table, "src/main/resources/data/" + table.getTableName() + ".ser");
+						insertMethods.writeIntoDisk(table,
+								"src/main/resources/data/" + table.getTableName() + ".ser");
 					}
 					i--;
 					// end of the page check for the page size

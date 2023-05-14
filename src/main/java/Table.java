@@ -19,10 +19,7 @@ public class Table implements Serializable {
     private Hashtable<String, String> ColumnMin;
     private Hashtable<String, String> ColumnMax;
     private Vector<Page> pages;
-    Node root;
-    String index1 = null;
-    String index2 = null;
-    String index3 = null;
+    Vector<Index> indexs;
 
     public Table(String tableName, String clustringKey, Hashtable<String, String> colNameType,
             Hashtable<String, String> colNameMin, Hashtable<String, String> colNameMax) {
@@ -37,6 +34,11 @@ public class Table implements Serializable {
         this.RangeNumber = new Vector<Hashtable<String, Object>>();
         // this.maxCount = 0;
 
+    }
+
+    public void addIndex(Node root,
+            String index1, String index2, String index3, String path) {
+        indexs.add(new Index(root, index1, index2, index3, path));
     }
 
     @Override
@@ -96,10 +98,6 @@ public class Table implements Serializable {
 
     public Hashtable<String, String> getColumnMax() {
         return ColumnMax;
-    }
-
-    public Node getRoot() {
-        return root;
     }
 
     public int getNumberofPages() {

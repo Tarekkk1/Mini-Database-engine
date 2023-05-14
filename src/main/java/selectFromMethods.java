@@ -8,160 +8,132 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
+import javax.management.ObjectName;
+import javax.print.DocFlavor.STRING;
+
 public class selectFromMethods {
-    public static boolean clumnIndex2(Vector<String> colNames, String tableName) throws ClassNotFoundException, IOException {
+    public static int clumnIndex2(Vector<String> colNames, String tableName)
+            throws ClassNotFoundException, IOException {
 
         // check if the column is indexed or not
-       Table table = updateMethods.getTablefromCSV(tableName);
+        Table table = updateMethods.getTablefromCSV(tableName);
         for (String colName : colNames) {
-            if (table.index1!=colName && table.index2==colName && table.index3==colName){
-                return false;
+            for (int i = 0; i < table.indexs.size(); i++) {
+                Index index = table.indexs.get(i);
+                if (colName.contains(index.index1) && colName.contains(index.index2)
+                        && colName.contains(index.index3)) {
+                    return i;
+                }
             }
+
         }
-        return true;
+        return -1;
 
     }
 
-    public static Vector<SQLTerm> getSqlTerm(String x, SQLTerm[] terms){
-        Vector<SQLTerm> result= new Vector<>();
-        for (int i=0;i<terms.length;i++) {
-            SQLTerm var= terms[i];
-            if(var.get_strColumnName().equals(x)){
+    public static Vector<SQLTerm> getSqlTerm(String x, SQLTerm[] terms) {
+        Vector<SQLTerm> result = new Vector<>();
+        for (int i = 0; i < terms.length; i++) {
+            SQLTerm var = terms[i];
+            if (var.get_strColumnName().equals(x)) {
                 result.add(var);
             }
         }
         return result;
     }
 
-
-    public static Vector<RowReference> searchIndex(SQLTerm[] terms, Table table) throws IOException, ParseException, DBAppException, ClassNotFoundException{
+    public static Vector<RowReference> searchIndex(Vector<SQLTerm> terms, Table table, int number)
+            throws IOException, ParseException, DBAppException, ClassNotFoundException {
 
         Object[] tableInfo = updateMethods.getTableInfoMeta(table.getTableName());
         Hashtable<String, Object> columnMin = (Hashtable<String, Object>) tableInfo[1];
         Hashtable<String, Object> columnMax = (Hashtable<String, Object>) tableInfo[2];
-        Vector<RowReference> result= new Vector<>();
-        for(SQLTerm term: terms){
 
-            String col= term._strColumnName;
-            String operator= term._strOperator;
-            Object value= term._objValue;
+        Index index = table.indexs.get(number);
+        Vector<RowReference> result = new Vector<>();
+        for (SQLTerm term : terms) {
 
-            Object xMin= columnMin.get(table.index1);
-            Object xMax= columnMax.get(table.index1);
-            Object yMin= columnMin.get(table.index2);
-            Object yMax= columnMax.get(table.index2);
-            Object zMin= columnMin.get(table.index3);
-            Object zMax= columnMax.get(table.index3);
+            String col = term._strColumnName;
+            String operator = term._strOperator;
+            Object value = term._objValue;
 
+            Object xMin = columnMin.get(index.index1);
+            Object xMax = columnMax.get(index.index1);
+            Object yMin = columnMin.get(index.index2);
+            Object yMax = columnMax.get(index.index2);
+            Object zMin = columnMin.get(index.index3);
+            Object zMax = columnMax.get(index.index3);
 
-            if(operator.equals("=")){
-                if(col.equals(table.index1)){
-                    xMin= value;
-                    xMax= value;
+            if (operator.equals("=")) {
+                if (col.equals(index.index1)) {
+                    xMin = value;
+                    xMax = value;
 
+                } else if (col.equals(index.index2)) {
+                    yMin = value;
+                    yMax = value;
+                } else {
+                    zMin = value;
+                    zMax = value;
                 }
-                else if(col.equals(table.index2)){
-                    yMin= value;
-                    yMax= value;
+            } else if (operator.equals(">")) {
+                if (col.equals(index.index1)) {
+                    xMin = value;
+                    xMax = columnMax.get(index.index1);
+
+                } else if (col.equals(index.index2)) {
+                    yMin = value;
+                    yMax = columnMax.get(index.index2);
+                } else {
+                    zMin = value;
+                    zMax = columnMax.get(index.index3);
                 }
-                else{
-                    zMin= value;
-                    zMax= value;
+
+            } else if (operator.equals(">=")) {
+                if (col.equals(index.index1)) {
+                    xMin = value;
+                    xMax = columnMax.get(index.index1);
+
+                } else if (col.equals(index.index2)) {
+                    yMin = value;
+                    yMax = columnMax.get(index.index2);
+                } else {
+                    zMin = value;
+                    zMax = columnMax.get(index.index3);
+                }
+            } else if (operator.equals("<")) {
+                if (col.equals(index.index1)) {
+                    xMin = columnMin.get(index.index1);
+                    xMax = value;
+
+                } else if (col.equals(index.index2)) {
+                    yMin = columnMin.get(index.index2);
+                    yMax = value;
+                } else {
+                    zMin = columnMin.get(index.index3);
+                    zMax = value;
+                }
+            } else if (operator.equals("<=")) {
+                if (col.equals(index.index1)) {
+                    xMin = columnMin.get(index.index1);
+                    xMax = value;
+
+                } else if (col.equals(index.index2)) {
+                    yMin = columnMin.get(index.index2);
+                    yMax = value;
+                } else {
+                    zMin = columnMin.get(index.index3);
+                    zMax = value;
                 }
             }
-            else if(operator.equals(">")){
-                if(col.equals(table.index1)){
-                    xMin= value;
-                    xMax= columnMax.get(table.index1);
-
-                }
-                else if(col.equals(table.index2)){
-                    yMin= value;
-                    yMax= columnMax.get(table.index2);
-                }
-                else{
-                    zMin= value;
-                    zMax= columnMax.get(table.index3);
-                }
-                
-            }
-            else if(operator.equals(">=")){
-                if(col.equals(table.index1)){
-                    xMin= value;
-                    xMax= columnMax.get(table.index1);
-
-                }
-                else if(col.equals(table.index2)){
-                    yMin= value;
-                    yMax= columnMax.get(table.index2);
-                }
-                else{
-                    zMin= value;
-                    zMax= columnMax.get(table.index3);
-                }
-            }
-            else if(operator.equals("<")){
-                if(col.equals(table.index1)){
-                    xMin= columnMin.get(table.index1);
-                    xMax= value;
-
-                }
-                else if(col.equals(table.index2)){
-                    yMin= columnMin.get(table.index2);
-                    yMax= value;
-                }
-                else{
-                    zMin= columnMin.get(table.index3);
-                    zMax= value;
-                }
-            }
-            else if(operator.equals("<=")){
-                if(col.equals(table.index1)){
-                    xMin= columnMin.get(table.index1);
-                    xMax= value;
-
-                }
-                else if(col.equals(table.index2)){
-                    yMin= columnMin.get(table.index2);
-                    yMax= value;
-                }
-                else{
-                    zMin= columnMin.get(table.index3);
-                    zMax= value;
-                }
-            }
-
-             // else if(operator.equals("!=")){
-            //     if(col.equals(table.index1)){
-            //         xMin= null;
-            //         xMax= null;
-
-            //     }
-            //     else if(col.equals(table.index2)){
-            //         yMin= null;
-            //         yMax= null;
-            //     }
-            //     else{
-            //         zMin= null;
-            //         zMax= null;
-            //     }
-            // }
 
             String indexPath = "src/main/resources/data/" + table.getTableName() + "index.ser";
-            Node root= updateMethods.getNodefromDisk(indexPath);
+            Node root = updateMethods.getNodefromDisk(indexPath);
             result.addAll(root.find(xMin, xMax, yMin, yMax, zMin, zMax));
-
-
-
-
 
         }
         return result;
     }
-
-
-
-
 
     public static Iterator selectFromTable(SQLTerm[] arrSQLTerms, String[] strarrOperators)
             throws DBAppException, ClassNotFoundException, IOException, ParseException {
@@ -176,142 +148,46 @@ public class selectFromMethods {
             colNames.add(var.get_strColumnName());
         }
 
-        Vector<Object> values = new Vector<>();
-        for (SQLTerm var : arrSQLTerms) {
-            values.add(var.get_objValue());
+        // solving the errors
+        int number = clumnIndex2(colNames, tableName);
 
-        }
+        if (number != -1) {
+            Index index = table.indexs.get(number);
+            String indexPath = index.path;
+            Node root = (Node) updateMethods.getNodefromDisk(indexPath);
 
+            Vector<SQLTerm> x = getSqlTerm(index.index1, arrSQLTerms);
+            Vector<SQLTerm> y = getSqlTerm(index.index2, arrSQLTerms);
+            Vector<SQLTerm> z = getSqlTerm(index.index3, arrSQLTerms);
 
-
-        if (clumnIndex2(colNames, tableName)) {
-            //get the columns using the index
-            //deserialize the index
-            String indexPath = "src/main/resources/data/" + tableName + "index.ser";
-            Node root= (Node) updateMethods.getNodefromDisk(indexPath);
-            Vector<SQLTerm> x= getSqlTerm(table.index1, arrSQLTerms);
-            Vector<SQLTerm> y= getSqlTerm(table.index2, arrSQLTerms);
-            Vector<SQLTerm> z= getSqlTerm(table.index3, arrSQLTerms);
-        
-            Object xMin= null;
-            Object xMax= null;
-            Object yMin= null;
-            Object yMax= null;
-            Object zMin= null;
-            Object zMax= null;
-            Object[] tableInfo = updateMethods.getTableInfoMeta(tableName);
-            Hashtable<String, Object> columnMin = (Hashtable<String, Object>) tableInfo[1];
-            Hashtable<String, Object> columnMax = (Hashtable<String, Object>) tableInfo[2];
-            for(int i=0;i<arrSQLTerms.length;i++){
-                SQLTerm var= arrSQLTerms[i];
-                String operator= var.get_strOperator();
-                if(operator.equals("=")){
-                    if(i==0){
-                        xMin= x;
-                        xMax= x;
-
-                    }
-                    else if(i==1){
-                        yMin= y;
-                        yMax= y;
-                    }
-                    else{
-                        zMin= z;
-                        zMax= z;
+            x.addAll(x.size() + 1, y);
+            x.addAll(x.size() + 1, z);
+            Vector<RowReference> result = searchIndex(x, table, number);
+            Vector<Hashtable<String, Object>> result2 = new Vector<>();
+            result2 = getRowsFromRefarance(result, table);
+            for (Hashtable<String, Object> row : result2) {
+                Vector<Boolean> bool = selectHelper(arrSQLTerms, row);
+                Boolean b = bool.get(0);
+                for (int j = 1; j < bool.size(); j++) {
+                    switch (strarrOperators[j - 1]) {
+                        case "AND":
+                            b = b & bool.get(j);
+                            break;
+                        case "OR":
+                            b = b | bool.get(j);
+                            break;
+                        case "XOR":
+                            b = b ^ bool.get(j);
+                            break;
+                        default:
+                            throw new DBAppException("Wrong Operator!");
                     }
                 }
-                else if(operator.equals(">")){
-                    if(i==0){
-                        xMin= x;
-                        xMax= columnMax.get(table.index1);
-
-                    }
-                    else if(i==1){
-                        yMin= y;
-                        yMax= columnMax.get(table.index2);
-                    }
-                    else{
-                        zMin= z;
-                        zMax= columnMax.get(table.index3);
-                    }
-                    
+                if (b == true) {
+                    iterator.add(row);
                 }
-                else if(operator.equals(">=")){
-                    if(i==0){
-                        xMin= x;
-                        xMax= columnMax.get(table.index1);
-
-                    }
-                    else if(i==1){
-                        yMin= y;
-                        yMax= columnMax.get(table.index2);
-                    }
-                    else{
-                        zMin= z;
-                        zMax= columnMax.get(table.index3);
-                    }
-                }
-                else if(operator.equals("<")){
-                    if(i==0){
-                        xMin= columnMin.get(table.index1);
-                        xMax= x;
-
-                    }
-                    else if(i==1){
-                        yMin= columnMin.get(table.index2);
-                        yMax= y;
-                    }
-                    else{
-                        zMin= columnMin.get(table.index3);
-                        zMax= z;
-                    }
-                }
-                else if(operator.equals("<=")){
-                    if(i==0){
-                        xMin= columnMin.get(table.index1);
-                        xMax= x;
-
-                    }
-                    else if(i==1){
-                        yMin= columnMin.get(table.index2);
-                        yMax= y;
-                    }
-                    else{
-                        zMin= columnMin.get(table.index3);
-                        zMax= z;
-                    }
-                }
-                else if(operator.equals("!=")){
-                    if(i==0){
-                        xMin= null;
-                        xMax= null;
-
-                    }
-                    else if(i==1){
-                        yMin= null;
-                        yMax= null;
-                    }
-                    else{
-                        zMin= null;
-                        zMax= null;
-                    }
-                }
-
             }
-        Vector<RowReference> result= root.find(xMin, xMax, yMin, yMax, zMin, zMax);
-        for(RowReference row: result){
-            for(PageAndRow record: row.pageAndRow){
-                String path= "src/main/resources/data/" + tableName + record.page + ".ser";
-                Object cluster= record.clustringvalue;
-                Vector<Hashtable<String, Object>> page = extractPage(path);
-                int rowNumber= updateMethods.getRowTarek(page, table.getClusteringKey(), cluster);
-                Hashtable<String,Object> resultRow= page.get(rowNumber);
-                iterator.add(resultRow);
 
-               
-        }
-    }
-        
         } else {
             for (int i = 0; i < table.getPages().size(); i++) {
                 String path = table.getPages().get(i).getPath();
@@ -342,6 +218,25 @@ public class selectFromMethods {
             }
         }
         return iterator.iterator();
+    }
+
+    private static Vector<Hashtable<String, Object>> getRowsFromRefarance(Vector<RowReference> result, Table table)
+            throws ClassNotFoundException, IOException {
+
+        Vector<Hashtable<String, Object>> rows = new Vector<Hashtable<String, Object>>();
+        for (RowReference rowReference : result) {
+
+            for (PageAndRow pageAndRow : rowReference.pageAndRow) {
+                String path = "src/main/resources/data/" + table.getName() + pageAndRow.page + ".ser";
+                Vector<Hashtable<String, Object>> page = extractPage(path);
+                int rowNumber = updateMethods.getRowTarek(page, table.getClusteringKey(),
+                        pageAndRow.clustringvalue);
+                Hashtable<String, Object> resultRow = page.get(rowNumber);
+                rows.add(resultRow);
+            }
+        }
+        return rows;
+
     }
 
     public static void validateSelectFromTable(SQLTerm[] arrSQLTerms, String[] strarrOperators) throws DBAppException {

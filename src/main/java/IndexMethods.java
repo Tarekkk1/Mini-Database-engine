@@ -22,12 +22,14 @@ public class IndexMethods {
         FileReader reader = new FileReader(file);
         BufferedReader buff = new BufferedReader(reader);
         StringBuilder s = new StringBuilder();
-        String line = buff.readLine();
+        String line = "";
         String indexName = columns[0] + "" + columns[1] + "" + columns[2] + "Index";
         String indexType = "Octree";
         FileWriter finalOne = new FileWriter("src/main/resources/metadata.csv");
 
-        do {
+        while ((line = buff.readLine()) != null)
+
+        {
             boolean inserted = false;
             System.out.println(line);
 
@@ -55,7 +57,7 @@ public class IndexMethods {
 
             }
 
-        } while ((line = buff.readLine()) != null);
+        }
 
         finalOne.write(s.toString());
         finalOne.close();
@@ -90,10 +92,6 @@ public class IndexMethods {
         String path;
         path = "src/main/resources/data/" + strTableName + ".ser";
         Table table = updateMethods.getTablefromCSV(path);
-        table.index1 = ColName[0];
-        table.index2 = ColName[1];
-        table.index3 = ColName[2];
-        deleteFromMethods.serialize(table, path);
 
         Object[] tableInfo = updateMethods.getTableInfoMeta(strTableName);
         Boundaries boundaries = new Boundaries();
@@ -109,6 +107,9 @@ public class IndexMethods {
         boundaries.maxZ = columnMax.get(ColName[2]);
 
         Node root = new Node(boundaries, insertMethods.readConfig()[1]);
+        Index index = new Index(root, ColName[0], ColName[1], ColName[2],
+                "src/main/resources/data/" + table.getName() + ColName[1] + ColName[1] + ColName[2] + ".ser");
+        deleteFromMethods.serialize(table, path);
 
         for (int i = 0; i < table.getPages().size(); i++) {
 
@@ -122,7 +123,7 @@ public class IndexMethods {
             }
         }
 
-        String indexPath = "src/main/resources/data/" + strTableName + "index.ser";
+        String indexPath = "src/main/resources/data/" + strTableName + ColName[0] + ColName[1] + ColName[2] + ".ser";
         deleteFromMethods.serialize(root, indexPath);
 
         updateMetadata(ColName, strTableName);
@@ -132,17 +133,19 @@ public class IndexMethods {
             throws ClassNotFoundException, IOException {
 
         Table table = updateMethods.getTablefromCSV(path);
-        if (table.index1 != null) {
-            if (colName.containsKey(table.index1) || colName.containsKey(table.index2)
-                    || colName.containsKey(table.index3)) {
+        for (Index index : table.indexs) {
+            if (index.index1 != null) {
+                if (colName.containsKey(index.index1) && colName.containsKey(index.index2)
+                        && colName.containsKey(index.index3)) {
 
-                Vector<Object> returned = new Vector<>();
-                returned.add(colName.get(table.index1));
-                returned.add(colName.get(table.index2));
-                returned.add(colName.get(table.index3));
+                    Vector<Object> returned = new Vector<>();
+                    returned.add(colName.get(index.index1));
+                    returned.add(colName.get(index.index2));
+                    returned.add(colName.get(index.index3));
 
-                return returned;
+                    return returned;
 
+                }
             }
         }
 
@@ -154,20 +157,18 @@ public class IndexMethods {
             throws ClassNotFoundException, IOException, DBAppException, ParseException {
         String path = "src/main/resources/data/" + strTableName + ".ser";
         Table table = updateMethods.getTablefromCSV(path);
-        if (table.index1 != null) {
-            File f = new File("src/main/resources/data/" + strTableName + "index.ser");
-            f.delete();
-            String[] ColName = new String[] { table.index1, table.index2, table.index3 };
-            table.index1 = null;
-            table.index2 = null;
-            table.index3 = null;
-            deleteFromMethods.serialize(table, path);
 
+        for (Index index : table.indexs) {
+            String indexPath = index.path;
+
+            File f = new File(indexPath);
+            f.delete();
+            String[] ColName = new String[] { index.index1, index.index2, index.index3
+            };
+            deleteFromMethods.serialize(table, path);
             createIndex(strTableName, ColName);
 
         }
-        return;
 
     }
-
 }
