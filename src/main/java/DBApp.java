@@ -176,7 +176,7 @@ public class DBApp implements DBAppInterface {
         // htblColNameMax);
         /////////////////////////////
 
-        createIndex("Teacher", new String[] { "id", "name", "gpa" });
+        // createIndex("Teacher", new String[] { "id", "name", "gpa" });
 
         // insertions
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();

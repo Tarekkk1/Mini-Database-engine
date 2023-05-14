@@ -27,11 +27,8 @@ public class IndexMethods {
         String indexType = "Octree";
         FileWriter finalOne = new FileWriter("src/main/resources/metadata.csv");
 
-        while ((line = buff.readLine()) != null)
-
-        {
+        do {
             boolean inserted = false;
-            System.out.println(line);
 
             String arr[] = line.split(",");
             for (int i = 0; i < columns.length; i++) {
@@ -57,8 +54,7 @@ public class IndexMethods {
 
             }
 
-        }
-
+        } while ((line = buff.readLine()) != null);
         finalOne.write(s.toString());
         finalOne.close();
 

@@ -73,8 +73,7 @@ public class insertMethods {
             throws DBAppException, Exception {
 
         Object[] tableInfo = updateMethods.getTableInfoMeta(tableName); // info about table
-        String clusteringCol = (String) tableInfo[4]; // clustering column name
-        System.out.println(colNameValue);
+        String clusteringCol = (String) tableInfo[6]; // clustering column name
 
         if (!colNameValue.containsKey(clusteringCol)) {
             throw new DBAppException("No Clustering Key");
