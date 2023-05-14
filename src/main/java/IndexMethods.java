@@ -105,6 +105,7 @@ public class IndexMethods {
         Node root = new Node(boundaries, insertMethods.readConfig()[1]);
         Index index = new Index(root, ColName[0], ColName[1], ColName[2],
                 "src/main/resources/data/" + table.getName() + ColName[1] + ColName[1] + ColName[2] + ".ser");
+        table.indexs.add(index);
         deleteFromMethods.serialize(table, path);
 
         for (int i = 0; i < table.getPages().size(); i++) {
