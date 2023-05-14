@@ -113,7 +113,7 @@ public class deleteFromMethods {
 			Object y = columnNameValue.get(index.index2);
 			Object z = columnNameValue.get(index.index3);
 			RowReference refrances = root.find(x, y, z);
-			Vector<Hashtable<String, Object>> rows = new Vector<>();
+			// Vector<Hashtable<String, Object>> rows = new Vector<>();
 
 			for (PageAndRow single : refrances.pageAndRow) {
 				int pageNumber = single.page;

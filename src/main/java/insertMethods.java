@@ -73,7 +73,7 @@ public class insertMethods {
             throws DBAppException, Exception {
 
         Object[] tableInfo = updateMethods.getTableInfoMeta(tableName); // info about table
-        String clusteringCol = (String) tableInfo[6]; // clustering column name
+        String clusteringCol = (String) tableInfo[4]; // clustering column name
 
         if (!colNameValue.containsKey(clusteringCol)) {
             throw new DBAppException("No Clustering Key");
@@ -257,6 +257,7 @@ public class insertMethods {
         Object z = values.get(2);
         Index index = table.indexs.get(returnIndex(path, colNameValue));
         String indexPath = index.path;
+        // System.out.println(indexPath);
 
         Node root = updateMethods.getNodefromDisk(indexPath);
 

@@ -27,12 +27,12 @@ public class Node implements Serializable {
 
         for (int i = 0; i < 8; i++) {
             Boundaries b = new Boundaries();
-            b.minX = (i % 2 == 0) ? boundaries.minX : (getMedian(b.minX, b.maxX));
-            b.maxX = (i % 2 == 0) ? getMedian(b.minX, b.maxX) : boundaries.maxX;
-            b.minY = (i % 4 < 2) ? boundaries.minY : getMedian(b.minY, b.maxY);
-            b.maxY = (i % 4 < 2) ? getMedian(b.minY, b.maxY) : boundaries.maxY;
-            b.minZ = (i < 4) ? boundaries.minZ : getMedian(b.minZ, b.maxZ);
-            b.maxZ = (i < 4) ? getMedian(b.minZ, b.maxZ) : boundaries.maxZ;
+            b.minX = (i % 2 == 0) ? boundaries.minX : (getMedian(boundaries.minX, boundaries.maxX));
+            b.maxX = (i % 2 == 0) ? getMedian(boundaries.minX, boundaries.maxX) : boundaries.maxX;
+            b.minY = (i % 4 < 2) ? boundaries.minY : getMedian(boundaries.minY, boundaries.maxY);
+            b.maxY = (i % 4 < 2) ? getMedian(boundaries.minY, boundaries.maxY) : boundaries.maxY;
+            b.minZ = (i < 4) ? boundaries.minZ : getMedian(boundaries.minZ, boundaries.maxZ);
+            b.maxZ = (i < 4) ? getMedian(boundaries.minZ, boundaries.maxZ) : boundaries.maxZ;
             Node child = new Node(b, 2);// to be considered
             children.add(child);
         }

@@ -1,6 +1,8 @@
 package main.java;
 
-public class Index {
+import java.io.Serializable;
+
+public class Index implements Serializable{
 
     Node root;
     String index1 = null;
