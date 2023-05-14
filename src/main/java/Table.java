@@ -19,7 +19,7 @@ public class Table implements Serializable {
     private Hashtable<String, String> ColumnMin;
     private Hashtable<String, String> ColumnMax;
     private Vector<Page> pages;
-    private Node root;
+    Node root;
     String index1 = null;
     String index2 = null;
     String index3 = null;

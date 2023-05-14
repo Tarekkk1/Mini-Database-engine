@@ -135,7 +135,7 @@ public class deleteFromMethods {
 			insertMethods.writeIntoDisk(table, "src/main/resources/data/" + table.getTableName() + ".ser");
 			if (forIndex != null && IndexMethods.columnIndexs(forIndex, path) != null) {
 				String nodePath = "src/main/resources/data/" + table.getName() + "index.ser";
-				Node root = updateMethods.getNodefromCSV(nodePath);
+				Node root = updateMethods.getNodefromDisk(nodePath);
 				Vector<Object> v = IndexMethods.columnIndexs(forIndex, path);
 
 				root.deleteRowrefrance(v.get(0), v.get(1), v.get(2), pageNumber,

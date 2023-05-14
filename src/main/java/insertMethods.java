@@ -214,7 +214,7 @@ public class insertMethods {
                 if (values != null) {
 
                     Node root = updateMethods
-                            .getNodefromCSV("src/main/resources/data/" + table.getTableName() + "index.ser");
+                            .getNodefromDisk("src/main/resources/data/" + table.getTableName() + "index.ser");
                     root.updateRowrefrance(values.get(0), values.get(1), values.get(2),
                             index, temp.get(table.getClusteringKey()), index + 1);
                     deleteFromMethods.serialize(root, "src/main/resources/data/" + table.getTableName() + "index.ser");
@@ -245,7 +245,7 @@ public class insertMethods {
         Object z = colNameValue.get(table.index3);
 
         String indexPath = "src/main/resources/data/" + tableName + "index.ser";
-        Node root = updateMethods.getNodefromCSV(indexPath);
+        Node root = updateMethods.getNodefromDisk(indexPath);
 
         root.insert(clustringvalue, index, x, y, z);
         deleteFromMethods.serialize(root, indexPath);

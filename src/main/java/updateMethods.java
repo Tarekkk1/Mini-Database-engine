@@ -57,7 +57,7 @@ public class updateMethods {
         fileOut.close();
         if (forIndex != null && IndexMethods.columnIndexs(forIndex, path) != null) {
             String nodePath = "src/main/resources/data/" + tableName + "index.ser";
-            Node root = updateMethods.getNodefromCSV(nodePath);
+            Node root = updateMethods.getNodefromDisk(nodePath);
             Vector<Object> v = IndexMethods.columnIndexs(forIndex, path);
 
             root.deleteRowrefrance(v.get(0), v.get(1), v.get(2), pageNumber, forIndex.get(table.getClusteringKey()));
@@ -211,7 +211,7 @@ public class updateMethods {
         return (Table) table;
     }
 
-    public static Node getNodefromCSV(String path) throws IOException, ClassNotFoundException {
+    public static Node getNodefromDisk(String path) throws IOException, ClassNotFoundException {
         FileInputStream fileIn = new FileInputStream(path);
         ObjectInputStream objectIn = new ObjectInputStream(fileIn);
         Object node = objectIn.readObject();
