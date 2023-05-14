@@ -180,11 +180,11 @@ public class DBApp implements DBAppInterface {
         // createIndex("Teacher", new String[] {"id" , "name" , "gpa"});
 
         // insertions
-        Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        htblColNameValue.put("id", new Integer(5));
-        htblColNameValue.put("name", new String("T3"));
-        htblColNameValue.put("gpa", new Integer(2));
-        dbApp.insertIntoTable("Teacher", htblColNameValue);
+        // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
+        // htblColNameValue.put("id", new Integer(2));
+        // htblColNameValue.put("name", new String("T"));
+        // htblColNameValue.put("gpa", new Integer(2));
+        // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // htblColNameValue.put("date", new
         // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
@@ -217,7 +217,7 @@ public class DBApp implements DBAppInterface {
 
         // delete
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        // htblColNameValue.put("id", new Integer(22));
+        // htblColNameValue.put("id", new Integer(1));
         // // htblColNameValue.put("name", new String("T10"));
         // // htblColNameValue.put("gpa", new Double(0.8));
         // // htblColNameValue.put("date", new
@@ -239,15 +239,15 @@ public class DBApp implements DBAppInterface {
         // dbApp.updateTable("Teacher", "10", htblColNameValue);
 
         // // //select
-        // FileInputStream fileIn = new
-        // FileInputStream("src/main/resources/data/Teacher0.ser");
-        // ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-        // Vector<Hashtable<String, Object>> v = (Vector<Hashtable<String, Object>>)
-        // objectIn.readObject();
-        // objectIn.close();
-        // fileIn.close();
+        FileInputStream fileIn = new
+        FileInputStream("src/main/resources/data/Teacher0.ser");
+        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+        Vector<Hashtable<String, Object>> v = (Vector<Hashtable<String, Object>>)
+        objectIn.readObject();
+        objectIn.close();
+        fileIn.close();
 
-        // System.out.println(v.get(3).get("id"));
+        System.out.println(v.get(1).get("id"));
 
     }
 
