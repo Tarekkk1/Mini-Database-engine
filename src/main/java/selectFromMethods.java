@@ -22,6 +22,147 @@ public class selectFromMethods {
 
     }
 
+    public static Vector<SQLTerm> getSqlTerm(String x, SQLTerm[] terms){
+        Vector<SQLTerm> result= new Vector<>();
+        for (int i=0;i<terms.length;i++) {
+            SQLTerm var= terms[i];
+            if(var.get_strColumnName().equals(x)){
+                result.add(var);
+            }
+        }
+        return result;
+    }
+
+
+    public static Vector<RowReference> searchIndex(SQLTerm[] terms, Table table) throws IOException, ParseException, DBAppException, ClassNotFoundException{
+
+        Object[] tableInfo = updateMethods.getTableInfoMeta(table.getTableName());
+        Hashtable<String, Object> columnMin = (Hashtable<String, Object>) tableInfo[1];
+        Hashtable<String, Object> columnMax = (Hashtable<String, Object>) tableInfo[2];
+        Vector<RowReference> result= new Vector<>();
+        for(SQLTerm term: terms){
+
+            String col= term._strColumnName;
+            String operator= term._strOperator;
+            Object value= term._objValue;
+
+            Object xMin= columnMin.get(table.index1);
+            Object xMax= columnMax.get(table.index1);
+            Object yMin= columnMin.get(table.index2);
+            Object yMax= columnMax.get(table.index2);
+            Object zMin= columnMin.get(table.index3);
+            Object zMax= columnMax.get(table.index3);
+
+
+            if(operator.equals("=")){
+                if(col.equals(table.index1)){
+                    xMin= value;
+                    xMax= value;
+
+                }
+                else if(col.equals(table.index2)){
+                    yMin= value;
+                    yMax= value;
+                }
+                else{
+                    zMin= value;
+                    zMax= value;
+                }
+            }
+            else if(operator.equals(">")){
+                if(col.equals(table.index1)){
+                    xMin= value;
+                    xMax= columnMax.get(table.index1);
+
+                }
+                else if(col.equals(table.index2)){
+                    yMin= value;
+                    yMax= columnMax.get(table.index2);
+                }
+                else{
+                    zMin= value;
+                    zMax= columnMax.get(table.index3);
+                }
+                
+            }
+            else if(operator.equals(">=")){
+                if(col.equals(table.index1)){
+                    xMin= value;
+                    xMax= columnMax.get(table.index1);
+
+                }
+                else if(col.equals(table.index2)){
+                    yMin= value;
+                    yMax= columnMax.get(table.index2);
+                }
+                else{
+                    zMin= value;
+                    zMax= columnMax.get(table.index3);
+                }
+            }
+            else if(operator.equals("<")){
+                if(col.equals(table.index1)){
+                    xMin= columnMin.get(table.index1);
+                    xMax= value;
+
+                }
+                else if(col.equals(table.index2)){
+                    yMin= columnMin.get(table.index2);
+                    yMax= value;
+                }
+                else{
+                    zMin= columnMin.get(table.index3);
+                    zMax= value;
+                }
+            }
+            else if(operator.equals("<=")){
+                if(col.equals(table.index1)){
+                    xMin= columnMin.get(table.index1);
+                    xMax= value;
+
+                }
+                else if(col.equals(table.index2)){
+                    yMin= columnMin.get(table.index2);
+                    yMax= value;
+                }
+                else{
+                    zMin= columnMin.get(table.index3);
+                    zMax= value;
+                }
+            }
+
+             // else if(operator.equals("!=")){
+            //     if(col.equals(table.index1)){
+            //         xMin= null;
+            //         xMax= null;
+
+            //     }
+            //     else if(col.equals(table.index2)){
+            //         yMin= null;
+            //         yMax= null;
+            //     }
+            //     else{
+            //         zMin= null;
+            //         zMax= null;
+            //     }
+            // }
+
+            String indexPath = "src/main/resources/data/" + table.getTableName() + "index.ser";
+            Node root= updateMethods.getNodefromDisk(indexPath);
+            result.addAll(root.find(xMin, xMax, yMin, yMax, zMin, zMax));
+
+
+
+
+
+        }
+        return result;
+    }
+
+
+
+
+
     public static Iterator selectFromTable(SQLTerm[] arrSQLTerms, String[] strarrOperators)
             throws DBAppException, ClassNotFoundException, IOException, ParseException {
         Vector<Hashtable<String, Object>> iterator = new Vector<>();
@@ -33,7 +174,6 @@ public class selectFromMethods {
         Vector<String> colNames = new Vector<>();
         for (SQLTerm var : arrSQLTerms) {
             colNames.add(var.get_strColumnName());
-
         }
 
         Vector<Object> values = new Vector<>();
@@ -42,163 +182,122 @@ public class selectFromMethods {
 
         }
 
-        if (clumnIndex2(colNames, tableName) && strarrOperators[0]=="AND" && strarrOperators[1]=="AND"
-        && strarrOperators.length==3) {
+
+
+        if (clumnIndex2(colNames, tableName)) {
             //get the columns using the index
             //deserialize the index
             String indexPath = "src/main/resources/data/" + tableName + "index.ser";
             Node root= (Node) updateMethods.getNodefromDisk(indexPath);
-            Object x= values.get(0);
-            Object y= values.get(1);
-            Object z= values.get(2);
-        //     if(colNames.get(0).equals(table.index1)){
-        //         if(colNames.get(1).equals(table.index2)){
-        //             x= values.get(0);
-        //             y= values.get(1);
-        //             z= values.get(2);
-                
-        //         }
-        //         else{
-        //             x= values.get(0);
-        //             y= values.get(2);
-        //             z= values.get(1);
-        //         }
+            Vector<SQLTerm> x= getSqlTerm(table.index1, arrSQLTerms);
+            Vector<SQLTerm> y= getSqlTerm(table.index2, arrSQLTerms);
+            Vector<SQLTerm> z= getSqlTerm(table.index3, arrSQLTerms);
+        
+            Object xMin= null;
+            Object xMax= null;
+            Object yMin= null;
+            Object yMax= null;
+            Object zMin= null;
+            Object zMax= null;
+            Object[] tableInfo = updateMethods.getTableInfoMeta(tableName);
+            Hashtable<String, Object> columnMin = (Hashtable<String, Object>) tableInfo[1];
+            Hashtable<String, Object> columnMax = (Hashtable<String, Object>) tableInfo[2];
+            for(int i=0;i<arrSQLTerms.length;i++){
+                SQLTerm var= arrSQLTerms[i];
+                String operator= var.get_strOperator();
+                if(operator.equals("=")){
+                    if(i==0){
+                        xMin= x;
+                        xMax= x;
 
-        //     }
-        //     else if(colNames.get(0).equals(table.index2)){
-        //         if(colNames.get(1).equals(table.index1)){
-        //             x= values.get(1);
-        //             y= values.get(0);
-        //             z= values.get(2);
-                
-        //         }
-        //         else{
-        //             x= values.get(1);
-        //             y= values.get(2);
-        //             z= values.get(0);
-        //         }
+                    }
+                    else if(i==1){
+                        yMin= y;
+                        yMax= y;
+                    }
+                    else{
+                        zMin= z;
+                        zMax= z;
+                    }
+                }
+                else if(operator.equals(">")){
+                    if(i==0){
+                        xMin= x;
+                        xMax= columnMax.get(table.index1);
 
-        //     }
-        //     else{
-        //         if(colNames.get(0).equals(table.index3)){
-        //             if(colNames.get(1).equals(table.index2)){
-        //                 x= values.get(2);
-        //                 y= values.get(1);
-        //                 z= values.get(0);
+                    }
+                    else if(i==1){
+                        yMin= y;
+                        yMax= columnMax.get(table.index2);
+                    }
+                    else{
+                        zMin= z;
+                        zMax= columnMax.get(table.index3);
+                    }
                     
-        //             }
-        //             else{
-        //                 x= values.get(2);
-        //                 y= values.get(0);
-        //                 z= values.get(1);
-        //             }
-        //     }
-        // }
-        Object xMin= null;
-        Object xMax= null;
-        Object yMin= null;
-        Object yMax= null;
-        Object zMin= null;
-        Object zMax= null;
-        Object[] tableInfo = updateMethods.getTableInfoMeta(tableName);
-        Hashtable<String, Object> columnMin = (Hashtable<String, Object>) tableInfo[1];
-        Hashtable<String, Object> columnMax = (Hashtable<String, Object>) tableInfo[2];
-        for(int i=0;i<arrSQLTerms.length;i++){
-            SQLTerm var= arrSQLTerms[i];
-            String operator= var.get_strOperator();
-            if(operator.equals("=")){
-                if(i==0){
-                    xMin= x;
-                    xMax= x;
+                }
+                else if(operator.equals(">=")){
+                    if(i==0){
+                        xMin= x;
+                        xMax= columnMax.get(table.index1);
 
+                    }
+                    else if(i==1){
+                        yMin= y;
+                        yMax= columnMax.get(table.index2);
+                    }
+                    else{
+                        zMin= z;
+                        zMax= columnMax.get(table.index3);
+                    }
                 }
-                else if(i==1){
-                    yMin= y;
-                    yMax= y;
+                else if(operator.equals("<")){
+                    if(i==0){
+                        xMin= columnMin.get(table.index1);
+                        xMax= x;
+
+                    }
+                    else if(i==1){
+                        yMin= columnMin.get(table.index2);
+                        yMax= y;
+                    }
+                    else{
+                        zMin= columnMin.get(table.index3);
+                        zMax= z;
+                    }
                 }
-                else{
-                    zMin= z;
-                    zMax= z;
+                else if(operator.equals("<=")){
+                    if(i==0){
+                        xMin= columnMin.get(table.index1);
+                        xMax= x;
+
+                    }
+                    else if(i==1){
+                        yMin= columnMin.get(table.index2);
+                        yMax= y;
+                    }
+                    else{
+                        zMin= columnMin.get(table.index3);
+                        zMax= z;
+                    }
                 }
+                else if(operator.equals("!=")){
+                    if(i==0){
+                        xMin= null;
+                        xMax= null;
+
+                    }
+                    else if(i==1){
+                        yMin= null;
+                        yMax= null;
+                    }
+                    else{
+                        zMin= null;
+                        zMax= null;
+                    }
+                }
+
             }
-            else if(operator.equals(">")){
-                if(i==0){
-                    xMin= x;
-                    xMax= columnMax.get(table.index1);
-
-                }
-                else if(i==1){
-                    yMin= y;
-                    yMax= columnMax.get(table.index2);
-                }
-                else{
-                    zMin= z;
-                    zMax= columnMax.get(table.index3);
-                }
-                
-            }
-            else if(operator.equals(">=")){
-                if(i==0){
-                    xMin= x;
-                    xMax= columnMax.get(table.index1);
-
-                }
-                else if(i==1){
-                    yMin= y;
-                    yMax= columnMax.get(table.index2);
-                }
-                else{
-                    zMin= z;
-                    zMax= columnMax.get(table.index3);
-                }
-            }
-            else if(operator.equals("<")){
-                if(i==0){
-                    xMin= columnMin.get(table.index1);
-                    xMax= x;
-
-                }
-                else if(i==1){
-                    yMin= columnMin.get(table.index2);
-                    yMax= y;
-                }
-                else{
-                    zMin= columnMin.get(table.index3);
-                    zMax= z;
-                }
-            }
-            else if(operator.equals("<=")){
-                if(i==0){
-                    xMin= columnMin.get(table.index1);
-                    xMax= x;
-
-                }
-                else if(i==1){
-                    yMin= columnMin.get(table.index2);
-                    yMax= y;
-                }
-                else{
-                    zMin= columnMin.get(table.index3);
-                    zMax= z;
-                }
-            }
-            else if(operator.equals("!=")){
-                if(i==0){
-                    xMin= null;
-                    xMax= null;
-
-                }
-                else if(i==1){
-                    yMin= null;
-                    yMax= null;
-                }
-                else{
-                    zMin= null;
-                    zMax= null;
-                }
-            }
-
-        }
         Vector<RowReference> result= root.find(xMin, xMax, yMin, yMax, zMin, zMax);
         for(RowReference row: result){
             for(PageAndRow record: row.pageAndRow){
