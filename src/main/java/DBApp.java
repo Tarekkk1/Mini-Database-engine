@@ -186,10 +186,12 @@ public class DBApp implements DBAppInterface {
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // selectinon
-        SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", ">", 1);
+        SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 1);
+        SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "M");
+        SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 1);
 
-        SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1 };
-        String[] arrayOperators = new String[] {};
+        SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm2, sqlTerm3 };
+        String[] arrayOperators = new String[] { "AND", "AND" };
         Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
 
         System.out.println(iterator.next());

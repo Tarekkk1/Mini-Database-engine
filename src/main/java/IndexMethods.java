@@ -61,65 +61,9 @@ public class IndexMethods {
         finalOne.write(s.toString());
         finalOne.close();
 
-        // } catch (Exception e) {
-        // System.out.println("Couldn't open csv file");
-
-        // }
         return;
 
     }
-
-    // public static void updateMetadata(String[] columns, String tableName) throws
-    // IOException {
-    // String[] output = new String[6];
-    // // try {
-    // String file = "src/main/resources/metadata.csv";
-    // FileReader reader = new FileReader(file);
-    // BufferedReader buff = new BufferedReader(reader);
-    // StringBuilder s = new StringBuilder();
-    // String line = "";
-    // String indexName = columns[0] + "" + columns[1] + "" + columns[2] + "Index";
-    // String indexType = "Octree";
-    // FileWriter finalOne = new FileWriter("src/main/resources/metadata.csv");
-
-    // do {
-    // boolean inserted = false;
-
-    // String arr[] = line.split(",");
-    // for (int i = 0; i < columns.length; i++) {
-
-    // if (columns[i].equals(arr[1]) && arr[0].equals(tableName)) {
-    // s.append(arr[0]).append(",");
-    // s.append(arr[1]).append(",");
-    // s.append(arr[2]).append(",");
-    // s.append(arr[3]).append(",");
-    // s.append(indexName).append(",");
-    // s.append(indexType).append(",");
-    // s.append(arr[6]).append(",");
-    // s.append(arr[7]).append('\n');
-    // inserted = true;
-    // break;
-
-    // }
-
-    // }
-
-    // if (!inserted) {
-    // s.append(line).append('\n');
-
-    // }
-
-    // } while ((line = buff.readLine()) != null);
-    // finalOne.write(s.toString());
-    // finalOne.close();
-
-    // // } catch (Exception e) {
-    // // System.out.println("Couldn't open csv file");
-
-    // // }
-    // return;
-
-    // }
 
     private static boolean contains(String[] a, String s) {
         for (String i : a) {

@@ -212,7 +212,9 @@ public class updateMethods {
     }
 
     public static Node getNodefromDisk(String path) throws IOException, ClassNotFoundException {
+        System.out.println(path);
         FileInputStream fileIn = new FileInputStream(path);
+
         ObjectInputStream objectIn = new ObjectInputStream(fileIn);
         Object node = objectIn.readObject();
         objectIn.close();
