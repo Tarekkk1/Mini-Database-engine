@@ -20,8 +20,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.annotation.processing.SupportedOptions;
-
 public class DBApp implements DBAppInterface {
 
     public DBApp() {
@@ -33,51 +31,48 @@ public class DBApp implements DBAppInterface {
     public void createTable(String tableName, String clusteringKey,
             Hashtable<String, String> colNameType,
             Hashtable<String, String> colNameMin, Hashtable<String, String> colNameMax) throws DBAppException {
-        // try {
-        Table.exceptions(colNameType, colNameMin, colNameMax);
+        try {
+            Table.exceptions(colNameType, colNameMin, colNameMax);
 
-        File tableDirectory = new File("src/main/resources/data/");
-        String[] pages = tableDirectory.list();
-        boolean flag = false;
-        if (pages.length == 0) {
-            flag = false;
-        } else {
-            for (int i = 0; i < pages.length; i++) {
-                String pageName = pages[i];
-                if (pageName.equals(tableName + ".ser")) {
-                    flag = true;
-                    break;
+            File tableDirectory = new File("src/main/resources/data/");
+            String[] pages = tableDirectory.list();
+            boolean flag = false;
+            if (pages.length == 0) {
+                flag = false;
+            } else {
+                for (int i = 0; i < pages.length; i++) {
+                    String pageName = pages[i];
+                    if (pageName.equals(tableName + ".ser")) {
+                        flag = true;
+                        break;
+                    }
                 }
             }
+            if (flag) {
+                throw new DBAppException("The table already exists!");
+            }
+
+            // if (tableDirectory.exists())
+            // throw new DBAppException("Already Exists");
+            // else
+            // tableDirectory.mkdir();
+
+            Table tableInstance = new Table(tableName, clusteringKey, colNameType, colNameMin, colNameMax);
+
+            try {
+                FileOutputStream tableFile = new FileOutputStream("src/main/resources/data/" + tableName + ".ser");
+                ObjectOutputStream out = new ObjectOutputStream(tableFile);
+                out.writeObject(tableInstance);
+                out.close();
+                tableFile.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            wirteonMetaData(tableName, clusteringKey, colNameType, colNameMin, colNameMax);
+        } catch (Exception e) {
+            throw new DBAppException("Error in creating table");
         }
-        if (flag) {
-            throw new DBAppException("The table already exists!");
-        }
-
-        // if (tableDirectory.exists())
-        // throw new DBAppException("Already Exists");
-        // else
-        // tableDirectory.mkdir();
-
-        Table tableInstance = new Table(tableName, clusteringKey, colNameType, colNameMin, colNameMax);
-
-        try {
-            FileOutputStream tableFile = new FileOutputStream("src/main/resources/data/" + tableName + ".ser");
-            ObjectOutputStream out = new ObjectOutputStream(tableFile);
-            out.writeObject(tableInstance);
-            out.close();
-            tableFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        wirteonMetaData(tableName, clusteringKey, colNameType, colNameMin, colNameMax);
-        // }catch(
-
-        // Exception e)
-        // {
-        // throw new DBAppException("Error in creating table");
-        // }
 
     }
 
@@ -134,14 +129,14 @@ public class DBApp implements DBAppInterface {
     }
 
     @Override
-    public void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue) throws Exception {
-        // try {
-        deleteFromMethods.deleteFromTable(tableName, columnNameValue);
+    public void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue) throws DBAppException {
+        try {
+            deleteFromMethods.deleteFromTable(tableName, columnNameValue);
 
-        // } catch (Exception e) {
+        } catch (Exception e) {
 
-        // throw new DBAppException("Error in delete");
-        // }
+            throw new DBAppException("Error in delete");
+        }
     }
 
     public Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators) throws DBAppException {
@@ -169,8 +164,8 @@ public class DBApp implements DBAppInterface {
 
         // Hashtable<String, String> htblColNameMin = new Hashtable<String, String>();
         // Hashtable<String, String> htblColNameMax = new Hashtable<String, String>();
-        // htblColNameMax.put("id", "10");
-        // htblColNameMax.put("name", "Z");
+        // htblColNameMax.put("id", "1000");
+        // htblColNameMax.put("name", "ZZZZZZZZZZ");
         // htblColNameMax.put("gpa", "4");
         // // htblColNameMax.put("date", "2021-01-01");
         // htblColNameMin.put("name", "A");
@@ -181,7 +176,7 @@ public class DBApp implements DBAppInterface {
         // htblColNameMax);
         /////////////////////////////
 
-        // createIndex("Teacher", new String[] { "id", "name", "gpa" });
+        // createIndex("Teacher", new String[] {"id" , "name" , "gpa"});
 
         // insertions
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
@@ -195,13 +190,14 @@ public class DBApp implements DBAppInterface {
         // // <1,2,3> page 0
         // <4,5,6> page 1
 
-        FileInputStream fileIn = new FileInputStream("src/main/resources/data/Teacheridnamegpa.ser");
-        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-        Node v = (Node) objectIn.readObject();
-        objectIn.close();
-        fileIn.close();
+        // FileInputStream fileIn = new
+        // FileInputStream("src/main/resources/data/Teacheridnamegpa.ser");
+        // ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+        // Node v = (Node) objectIn.readObject();
+        // objectIn.close();
+        // fileIn.close();
 
-        System.out.println(v.points.size());
+        // System.out.println(v.points.size());
 
         // for (RowReference r : v.points) {
         // System.out.println(r.pageAndRow.get(0).page);
@@ -275,7 +271,7 @@ public class DBApp implements DBAppInterface {
         // objectIn.close();
         // fileIn.close();
 
-        // System.out.println(v.get(0).get("id"));
+        // System.out.println(v.get(1).get("id"));
 
     }
 
