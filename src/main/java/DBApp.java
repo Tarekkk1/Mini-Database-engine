@@ -185,27 +185,37 @@ public class DBApp implements DBAppInterface {
 
         // insertions
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        // htblColNameValue.put("id", new Integer(3));
-        // htblColNameValue.put("name", new String("B"));
+        // htblColNameValue.put("id", new Integer(2));
+        // htblColNameValue.put("name", new String("Y"));
         // htblColNameValue.put("gpa", new Integer(1));
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
-        // htblColNameValue.put("date", new
-        // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // // <1,2,3> page 0
         // <4,5,6> page 1
 
-        // FileInputStream fileIn = new
-        // FileInputStream("src/main/resources/data/Teacheridnamegpa.ser");
-        // ObjectInputStream objectIn = new ObjectInputStream(fileIn);
-        // Node v = (Node) objectIn.readObject();
-        // objectIn.close();
-        // fileIn.close();
+        FileInputStream fileIn = new FileInputStream("src/main/resources/data/Teacheridnamegpa.ser");
+        ObjectInputStream objectIn = new ObjectInputStream(fileIn);
+        Node v = (Node) objectIn.readObject();
+        objectIn.close();
+        fileIn.close();
 
-        // System.out.println(v.points.get(0).pageAndRow.get(0).clustringvalue);
+        System.out.println(v.points.size());
 
+        // for (RowReference r : v.points) {
+        // System.out.println(r.pageAndRow.get(0).page);
+        // }
+
+        // for (int i = 0; i < 8; i++) {
+        // // Node Childs =
+        // System.out.println(i);
+        // Node number = v.children.get(i);
+        // if (number.points.size() != 0)
+        // System.out.println(number.points.get(0).pageAndRow.get(0).clustringvalue);
+        // System.out.println("--------------------------");
+
+        // }
         // // int number = v.children.get(2).children.get(6).points.size();
 
         // // System.out.println(number);
@@ -234,14 +244,14 @@ public class DBApp implements DBAppInterface {
         // System.out.println(v.get(0).get("id"));
 
         // delete
-        Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        htblColNameValue.put("id", new Integer(3));
-        htblColNameValue.put("name", new String("B"));
-        htblColNameValue.put("gpa", new Integer(1));
-        // htblColNameValue.put("date", new
-        // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
+        // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
+        // htblColNameValue.put("id", new Integer(2));
+        // // htblColNameValue.put("name", new String("B"));
+        // // htblColNameValue.put("gpa", new Integer(1));
+        // //// htblColNameValue.put("date", new
+        // //// SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
 
-        dbApp.deleteFromTable("Teacher", htblColNameValue);
+        // dbApp.deleteFromTable("Teacher", htblColNameValue);
 
         // when a record is deleted, values shift upwards leaving empty spaces in the
         // page from the bottom

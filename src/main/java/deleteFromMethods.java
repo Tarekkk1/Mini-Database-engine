@@ -121,7 +121,10 @@ public class deleteFromMethods {
 					refrances.x + " " + refrances.y + " " + refrances.z + " " + refrances.pageAndRow.get(0).page);
 			// Vector<Hashtable<String, Object>> rows = new Vector<>();
 			System.out.println(refrances.pageAndRow.size());
-			for (PageAndRow single : refrances.pageAndRow) {
+			Vector<PageAndRow> refrancess = refrances.pageAndRow;
+
+			for (int j = 0; j < refrances.pageAndRow.size(); j++) {
+				PageAndRow single = refrances.pageAndRow.get(j);
 				int pageNumber = single.page;
 				Object cluster = single.clustringvalue;
 
