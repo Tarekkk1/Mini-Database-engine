@@ -40,7 +40,13 @@ public class Node implements Serializable {
         for (int i = 0; i < points.size(); i++) {
             RowReference point = points.get(i);
             int index = getChildNumber(point);
-            children.get(index).points.add(point);
+            System.out.println(index);
+            for (PageAndRow pg : point.pageAndRow) {
+
+                children.get(index).insert(pg.clustringvalue, pg.page, point.x, point.y, point.z);
+
+            }
+
         }
 
         points.clear();
@@ -118,9 +124,11 @@ public class Node implements Serializable {
                 RowReference point = new RowReference(x, y, z);
                 point.pageAndRow = new Vector<>();
                 point.pageAndRow.add(new PageAndRow(page, clustringvalue));
+
                 points.add(point);
 
                 if (points.size() > maxPoints) {
+
                     octSplit();
                 }
             } else {

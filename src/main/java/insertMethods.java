@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import javax.security.cert.X509Certificate;
+import javax.xml.transform.Templates;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -40,12 +41,15 @@ public class insertMethods {
         if (index == 0) {
 
             pagePath = createPage(table, colNameValue, primaryKey, index);
-            insertIntoIndex(tableName, 0, colNameValue);
-
+            if (returnIndex(tablePath, colNameValue) != -1) {
+                insertIntoIndex(tableName, 0, colNameValue);
+            }
         } else {
             int[] pageAndRecord = binarySearch(table, colNameValue);
             insertRowTarek(table, colNameValue, pageAndRecord[0], pageAndRecord[1]);
-            insertIntoIndex(tableName, pageAndRecord[0], colNameValue);
+            if (returnIndex(tablePath, colNameValue) != -1) {
+                insertIntoIndex(tableName, pageAndRecord[0], colNameValue);
+            }
 
         }
 
@@ -226,13 +230,15 @@ public class insertMethods {
             throws ClassNotFoundException, IOException, ParseException, DBAppException {
 
         Table table = updateMethods.getTablefromCSV(path);
-        for (int i = 0; i < table.indexs.size(); i++) {
-            Index index = table.indexs.get(i);
-            if (index.index1 != null) {
-                if (colName.containsKey(index.index1) && colName.containsKey(index.index2)
-                        && colName.containsKey(index.index3)) {
+        if (table.indexs != null) {
+            for (int i = 0; i < table.indexs.size(); i++) {
+                Index index = table.indexs.get(i);
+                if (index.index1 != null) {
+                    if (colName.containsKey(index.index1) && colName.containsKey(index.index2)
+                            && colName.containsKey(index.index3)) {
 
-                    return i;
+                        return i;
+                    }
                 }
             }
         }

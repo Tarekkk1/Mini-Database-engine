@@ -188,18 +188,20 @@ public class IndexMethods {
             throws ClassNotFoundException, IOException {
 
         Table table = updateMethods.getTablefromCSV(path);
-        for (Index index : table.indexs) {
-            if (index.index1 != null) {
-                if (colName.containsKey(index.index1) && colName.containsKey(index.index2)
-                        && colName.containsKey(index.index3)) {
+        if (table.indexs != null) {
+            for (Index index : table.indexs) {
+                if (index.index1 != null) {
+                    if (colName.containsKey(index.index1) && colName.containsKey(index.index2)
+                            && colName.containsKey(index.index3)) {
 
-                    Vector<Object> returned = new Vector<>();
-                    returned.add(colName.get(index.index1));
-                    returned.add(colName.get(index.index2));
-                    returned.add(colName.get(index.index3));
+                        Vector<Object> returned = new Vector<>();
+                        returned.add(colName.get(index.index1));
+                        returned.add(colName.get(index.index2));
+                        returned.add(colName.get(index.index3));
 
-                    return returned;
+                        return returned;
 
+                    }
                 }
             }
         }

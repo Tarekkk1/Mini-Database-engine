@@ -20,7 +20,7 @@ public interface DBAppInterface {
                         throws DBAppException;
 
         void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue)
-                        throws DBAppException;
+                        throws DBAppException, Exception;
 
         // Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators) throws
         // DBAppException;

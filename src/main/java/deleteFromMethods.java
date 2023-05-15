@@ -113,6 +113,7 @@ public class deleteFromMethods {
 			Object y = columnNameValue.get(index.index2);
 			Object z = columnNameValue.get(index.index3);
 			RowReference refrances = root.find(x, y, z);
+			System.out.println(index.path);
 			// Vector<Hashtable<String, Object>> rows = new Vector<>();
 
 			for (PageAndRow single : refrances.pageAndRow) {
@@ -121,8 +122,7 @@ public class deleteFromMethods {
 
 				String pagePath = table.getPages().get(pageNumber).getPath(); // page path
 				Vector<Hashtable<String, Object>> page = updateMethods.getPagesfromCSV(pagePath);
-				int rowNumber = updateMethods.getRowTarek(page, clusteringCol, cluster); // to
-																							// be
+				int rowNumber = updateMethods.getRowTarek(page, clusteringCol, cluster);
 				if (!checkCommne(page.get(rowNumber),
 						columnNameValue)) {
 					throw new DBAppException("Data not found");
@@ -131,7 +131,7 @@ public class deleteFromMethods {
 				if (rowNumber == -1) {
 					throw new DBAppException("No row Found");
 				}
-				// check for matching data
+
 				flag = true;
 				Hashtable<String, Object> forIndex = page.get(rowNumber);
 				page.remove(rowNumber);
