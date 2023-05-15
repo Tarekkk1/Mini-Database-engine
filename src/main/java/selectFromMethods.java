@@ -10,39 +10,201 @@ import java.util.Vector;
 
 import javax.management.ObjectName;
 import javax.print.DocFlavor.STRING;
+import javax.xml.crypto.dsig.keyinfo.RetrievalMethod;
 
 public class selectFromMethods {
-    public static int clumnIndex2(Vector<String> colNames, String tableName)
-            throws ClassNotFoundException, IOException {
+    // public static int clumnIndex2(Vector<String> colNames, String tableName)
+    // throws ClassNotFoundException, IOException {
 
-        // check if the column is indexed or not
-        Table table = updateMethods.getTablefromCSV(tableName);
-        for (String colName : colNames) {
-            for (int i = 0; i < table.indexs.size(); i++) {
-                Index index = table.indexs.get(i);
-                if (colName.contains(index.index1) && colName.contains(index.index2)
-                        && colName.contains(index.index3)) {
-                    return i;
+    // // check if the column is indexed or not
+    // Table table = updateMethods.getTablefromCSV(tableName);
+    // for (String colName : colNames) {
+    // for (int i = 0; i < table.indexs.size(); i++) {
+    // Index index = table.indexs.get(i);
+    // if (colName.contains(index.index1) && colName.contains(index.index2)
+    // && colName.contains(index.index3)) {
+    // return i;
+    // }
+    // }
+
+    // }
+    // return -1;
+
+    // }
+
+    // public static Vector<RowReference> searchIndex(Vector<SQLTerm> terms, Table
+    // table, int number)
+    // throws IOException, ParseException, DBAppException, ClassNotFoundException {
+
+    // Object[] tableInfo = updateMethods.getTableInfoMeta(table.getTableName());
+    // Hashtable<String, Object> columnMin = (Hashtable<String, Object>)
+    // tableInfo[1];
+    // Hashtable<String, Object> columnMax = (Hashtable<String, Object>)
+    // tableInfo[2];
+
+    // Index index = table.indexs.get(number);
+    // Vector<RowReference> result = new Vector<>();
+    // for (SQLTerm term : terms) {
+
+    // String col = term._strColumnName;
+    // String operator = term._strOperator;
+    // Object value = term._objValue;
+
+    // Object xMin = columnMin.get(index.index1);
+    // Object xMax = columnMax.get(index.index1);
+    // Object yMin = columnMin.get(index.index2);
+    // Object yMax = columnMax.get(index.index2);
+    // Object zMin = columnMin.get(index.index3);
+    // Object zMax = columnMax.get(index.index3);
+
+    // if (operator.equals("=")) {
+    // if (col.equals(index.index1)) {
+    // xMin = value;
+    // xMax = value;
+
+    // } else if (col.equals(index.index2)) {
+    // yMin = value;
+    // yMax = value;
+    // } else {
+    // zMin = value;
+    // zMax = value;
+    // }
+    // } else if (operator.equals(">")) {
+    // if (col.equals(index.index1)) {
+    // xMin = value;
+    // xMax = columnMax.get(index.index1);
+
+    // } else if (col.equals(index.index2)) {
+    // yMin = value;
+    // yMax = columnMax.get(index.index2);
+    // } else {
+    // zMin = value;
+    // zMax = columnMax.get(index.index3);
+    // }
+
+    // } else if (operator.equals(">=")) {
+    // if (col.equals(index.index1)) {
+    // xMin = value;
+    // xMax = columnMax.get(index.index1);
+
+    // } else if (col.equals(index.index2)) {
+    // yMin = value;
+    // yMax = columnMax.get(index.index2);
+    // } else {
+    // zMin = value;
+    // zMax = columnMax.get(index.index3);
+    // }
+    // } else if (operator.equals("<")) {
+    // if (col.equals(index.index1)) {
+    // xMin = columnMin.get(index.index1);
+    // xMax = value;
+
+    // } else if (col.equals(index.index2)) {
+    // yMin = columnMin.get(index.index2);
+    // yMax = value;
+    // } else {
+    // zMin = columnMin.get(index.index3);
+    // zMax = value;
+    // }
+    // } else if (operator.equals("<=")) {
+    // if (col.equals(index.index1)) {
+    // xMin = columnMin.get(index.index1);
+    // xMax = value;
+
+    // } else if (col.equals(index.index2)) {
+    // yMin = columnMin.get(index.index2);
+    // yMax = value;
+    // } else {
+    // zMin = columnMin.get(index.index3);
+    // zMax = value;
+    // }
+    // }
+
+    // String indexPath = "src/main/resources/data/" + table.getTableName() +
+    // "index.ser";
+    // Node root = updateMethods.getNodefromDisk(indexPath);
+    // result.addAll(root.find(xMin, xMax, yMin, yMax, zMin, zMax));
+
+    // }
+    // return result;
+    // }
+
+    public static Iterator selectFromTable(SQLTerm[] arrSQLTerms, String[] strarrOperators)
+            throws DBAppException, ClassNotFoundException, IOException, ParseException {
+        Vector<Hashtable<String, Object>> iterator = new Vector<>();
+        validateSelectFromTable(arrSQLTerms, strarrOperators);
+        String tableName = arrSQLTerms[0].get_strTableName();
+        Table table = extractTable("src/main/resources/data/" + tableName + ".ser");
+        int index = -1;
+        for (Index indexTable : table.indexs) {
+            index = validateSelectonIndex(arrSQLTerms, strarrOperators, indexTable);
+            if (index != -1)
+                break;
+        }
+
+        if (index != -1) {
+            Vector<RowReference> rowrefrance = useIndex(arrSQLTerms, strarrOperators, table, index);
+            Vector<Hashtable<String, Object>> rows = getRowsFromRefarance(rowrefrance, table);
+            for (Hashtable<String, Object> row : rows) {
+
+                Vector<Boolean> bool = selectHelper(arrSQLTerms, row);
+                Boolean b = bool.get(0);
+                for (int j = 1; j < bool.size(); j++) {
+                    switch (strarrOperators[j - 1]) {
+                        case "AND":
+                            b = b & bool.get(j);
+                            break;
+                        case "OR":
+                            b = b | bool.get(j);
+                            break;
+                        case "XOR":
+                            b = b ^ bool.get(j);
+                            break;
+                        default:
+                            throw new DBAppException("Wrong Operator!");
+                    }
+                }
+                if (b == true) {
+                    iterator.add(row);
                 }
             }
 
-        }
-        return -1;
+        } else {
+            for (int i = 0; i < table.getPages().size(); i++) {
+                String path = table.getPages().get(i).getPath();
+                Vector<Hashtable<String, Object>> page = extractPage(path);
+                for (Hashtable<String, Object> row : page) {
 
-    }
+                    Vector<Boolean> bool = selectHelper(arrSQLTerms, row);
+                    Boolean b = bool.get(0);
+                    for (int j = 1; j < bool.size(); j++) {
+                        switch (strarrOperators[j - 1]) {
+                            case "AND":
+                                b = b & bool.get(j);
+                                break;
+                            case "OR":
+                                b = b | bool.get(j);
+                                break;
+                            case "XOR":
+                                b = b ^ bool.get(j);
+                                break;
+                            default:
+                                throw new DBAppException("Wrong Operator!");
+                        }
+                    }
+                    if (b == true) {
+                        iterator.add(row);
+                    }
+                }
 
-    public static Vector<SQLTerm> getSqlTerm(String x, SQLTerm[] terms) {
-        Vector<SQLTerm> result = new Vector<>();
-        for (int i = 0; i < terms.length; i++) {
-            SQLTerm var = terms[i];
-            if (var.get_strColumnName().equals(x)) {
-                result.add(var);
             }
         }
-        return result;
+        return iterator.iterator();
+
     }
 
-    public static Vector<RowReference> searchIndex(Vector<SQLTerm> terms, Table table, int number)
+    private static Vector<RowReference> useIndex(SQLTerm[] arrSQLTerms, String[] strarrOperators, Table table,
+            int number)
             throws IOException, ParseException, DBAppException, ClassNotFoundException {
 
         Object[] tableInfo = updateMethods.getTableInfoMeta(table.getTableName());
@@ -50,20 +212,17 @@ public class selectFromMethods {
         Hashtable<String, Object> columnMax = (Hashtable<String, Object>) tableInfo[2];
 
         Index index = table.indexs.get(number);
-        Vector<RowReference> result = new Vector<>();
-        for (SQLTerm term : terms) {
+        Object xMin = columnMin.get(index.index1);
+        Object xMax = columnMax.get(index.index1);
+        Object yMin = columnMin.get(index.index2);
+        Object yMax = columnMax.get(index.index2);
+        Object zMin = columnMin.get(index.index3);
+        Object zMax = columnMax.get(index.index3);
+        for (SQLTerm term : arrSQLTerms) {
 
             String col = term._strColumnName;
             String operator = term._strOperator;
             Object value = term._objValue;
-
-            Object xMin = columnMin.get(index.index1);
-            Object xMax = columnMax.get(index.index1);
-            Object yMin = columnMin.get(index.index2);
-            Object yMax = columnMax.get(index.index2);
-            Object zMin = columnMin.get(index.index3);
-            Object zMax = columnMax.get(index.index3);
-
             if (operator.equals("=")) {
                 if (col.equals(index.index1)) {
                     xMin = value;
@@ -127,97 +286,32 @@ public class selectFromMethods {
                 }
             }
 
-            String indexPath = "src/main/resources/data/" + table.getTableName() + "index.ser";
-            Node root = updateMethods.getNodefromDisk(indexPath);
-            result.addAll(root.find(xMin, xMax, yMin, yMax, zMin, zMax));
-
         }
+        Vector<RowReference> result = new Vector<>();
+        String indexPath = "src/main/resources/data/" + table.getTableName() + "index.ser";
+        Node root = updateMethods.getNodefromDisk(indexPath);
+        result.addAll(root.find(xMin, xMax, yMin, yMax, zMin, zMax));
         return result;
+
     }
 
-    public static Iterator selectFromTable(SQLTerm[] arrSQLTerms, String[] strarrOperators)
-            throws DBAppException, ClassNotFoundException, IOException, ParseException {
-        Vector<Hashtable<String, Object>> iterator = new Vector<>();
-        validateSelectFromTable(arrSQLTerms, strarrOperators);
-        String tableName = arrSQLTerms[0].get_strTableName();
-        Table table = extractTable("src/main/resources/data/" + tableName + ".ser");
-        // her we will use the index if possible
+    private static int validateSelectonIndex(SQLTerm[] sqlTerm, String[] strarrOperators, Index index) {
+        String index1 = index.index1;
+        String index2 = index.index2;
+        String index3 = index.index3;
+        for (int i = 0; i < sqlTerm.length - 2; i++) {
+            SQLTerm term1 = sqlTerm[i];
+            SQLTerm term2 = sqlTerm[i + 1];
+            SQLTerm term3 = sqlTerm[i + 2];
+            if ((term1.equals(term3) || term1.equals(term2) || term1.equals(term1)) &&
+                    (term2.equals(term3) || term2.equals(term2) || term2.equals(term1)) &&
+                    (term3.equals(term3) || term3.equals(term2) || term3.equals(term1)))
+                if (strarrOperators[i].equals("AND") && strarrOperators[i + 1].equals("AND"))
+                    return i;
 
-        Vector<String> colNames = new Vector<>();
-        for (SQLTerm var : arrSQLTerms) {
-            colNames.add(var.get_strColumnName());
         }
+        return -1;
 
-        // solving the errors
-        int number = clumnIndex2(colNames, tableName);
-
-        if (number != -1) {
-            Index index = table.indexs.get(number);
-            String indexPath = index.path;
-            Node root = (Node) updateMethods.getNodefromDisk(indexPath);
-
-            Vector<SQLTerm> x = getSqlTerm(index.index1, arrSQLTerms);
-            Vector<SQLTerm> y = getSqlTerm(index.index2, arrSQLTerms);
-            Vector<SQLTerm> z = getSqlTerm(index.index3, arrSQLTerms);
-
-            x.addAll(x.size() + 1, y);
-            x.addAll(x.size() + 1, z);
-            Vector<RowReference> result = searchIndex(x, table, number);
-            Vector<Hashtable<String, Object>> result2 = new Vector<>();
-            result2 = getRowsFromRefarance(result, table);
-            for (Hashtable<String, Object> row : result2) {
-                Vector<Boolean> bool = selectHelper(arrSQLTerms, row);
-                Boolean b = bool.get(0);
-                for (int j = 1; j < bool.size(); j++) {
-                    switch (strarrOperators[j - 1]) {
-                        case "AND":
-                            b = b & bool.get(j);
-                            break;
-                        case "OR":
-                            b = b | bool.get(j);
-                            break;
-                        case "XOR":
-                            b = b ^ bool.get(j);
-                            break;
-                        default:
-                            throw new DBAppException("Wrong Operator!");
-                    }
-                }
-                if (b == true) {
-                    iterator.add(row);
-                }
-            }
-
-        } else {
-            for (int i = 0; i < table.getPages().size(); i++) {
-                String path = table.getPages().get(i).getPath();
-                Vector<Hashtable<String, Object>> page = extractPage(path);
-                for (Hashtable<String, Object> row : page) {
-
-                    Vector<Boolean> bool = selectHelper(arrSQLTerms, row);
-                    Boolean b = bool.get(0);
-                    for (int j = 1; j < bool.size(); j++) {
-                        switch (strarrOperators[j - 1]) {
-                            case "AND":
-                                b = b & bool.get(j);
-                                break;
-                            case "OR":
-                                b = b | bool.get(j);
-                                break;
-                            case "XOR":
-                                b = b ^ bool.get(j);
-                                break;
-                            default:
-                                throw new DBAppException("Wrong Operator!");
-                        }
-                    }
-                    if (b == true) {
-                        iterator.add(row);
-                    }
-                }
-            }
-        }
-        return iterator.iterator();
     }
 
     private static Vector<Hashtable<String, Object>> getRowsFromRefarance(Vector<RowReference> result, Table table)
