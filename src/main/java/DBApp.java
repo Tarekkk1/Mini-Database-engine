@@ -33,48 +33,51 @@ public class DBApp implements DBAppInterface {
     public void createTable(String tableName, String clusteringKey,
             Hashtable<String, String> colNameType,
             Hashtable<String, String> colNameMin, Hashtable<String, String> colNameMax) throws DBAppException {
-        try {
-            Table.exceptions(colNameType, colNameMin, colNameMax);
+        // try {
+        Table.exceptions(colNameType, colNameMin, colNameMax);
 
-            File tableDirectory = new File("src/main/resources/data/");
-            String[] pages = tableDirectory.list();
-            boolean flag = false;
-            if (pages.length == 0) {
-                flag = false;
-            } else {
-                for (int i = 0; i < pages.length; i++) {
-                    String pageName = pages[i];
-                    if (pageName.equals(tableName + ".ser")) {
-                        flag = true;
-                        break;
-                    }
+        File tableDirectory = new File("src/main/resources/data/");
+        String[] pages = tableDirectory.list();
+        boolean flag = false;
+        if (pages.length == 0) {
+            flag = false;
+        } else {
+            for (int i = 0; i < pages.length; i++) {
+                String pageName = pages[i];
+                if (pageName.equals(tableName + ".ser")) {
+                    flag = true;
+                    break;
                 }
             }
-            if (flag) {
-                throw new DBAppException("The table already exists!");
-            }
-
-            // if (tableDirectory.exists())
-            // throw new DBAppException("Already Exists");
-            // else
-            // tableDirectory.mkdir();
-
-            Table tableInstance = new Table(tableName, clusteringKey, colNameType, colNameMin, colNameMax);
-
-            try {
-                FileOutputStream tableFile = new FileOutputStream("src/main/resources/data/" + tableName + ".ser");
-                ObjectOutputStream out = new ObjectOutputStream(tableFile);
-                out.writeObject(tableInstance);
-                out.close();
-                tableFile.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            wirteonMetaData(tableName, clusteringKey, colNameType, colNameMin, colNameMax);
-        } catch (Exception e) {
-            throw new DBAppException("Error in creating table");
         }
+        if (flag) {
+            throw new DBAppException("The table already exists!");
+        }
+
+        // if (tableDirectory.exists())
+        // throw new DBAppException("Already Exists");
+        // else
+        // tableDirectory.mkdir();
+
+        Table tableInstance = new Table(tableName, clusteringKey, colNameType, colNameMin, colNameMax);
+
+        try {
+            FileOutputStream tableFile = new FileOutputStream("src/main/resources/data/" + tableName + ".ser");
+            ObjectOutputStream out = new ObjectOutputStream(tableFile);
+            out.writeObject(tableInstance);
+            out.close();
+            tableFile.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        wirteonMetaData(tableName, clusteringKey, colNameType, colNameMin, colNameMax);
+        // }catch(
+
+        // Exception e)
+        // {
+        // throw new DBAppException("Error in creating table");
+        // }
 
     }
 
@@ -181,11 +184,11 @@ public class DBApp implements DBAppInterface {
         // createIndex("Teacher", new String[] { "id", "name", "gpa" });
 
         // insertions
-        Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        htblColNameValue.put("id", new Integer(3));
-        htblColNameValue.put("name", new String("B"));
-        htblColNameValue.put("gpa", new Integer(1));
-        dbApp.insertIntoTable("Teacher", htblColNameValue);
+        // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
+        // htblColNameValue.put("id", new Integer(3));
+        // htblColNameValue.put("name", new String("B"));
+        // htblColNameValue.put("gpa", new Integer(1));
+        // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // htblColNameValue.put("date", new
         // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
@@ -201,7 +204,7 @@ public class DBApp implements DBAppInterface {
         // objectIn.close();
         // fileIn.close();
 
-        // // System.out.println(v.children.get().points.size());
+        // System.out.println(v.points.get(0).pageAndRow.get(0).clustringvalue);
 
         // // int number = v.children.get(2).children.get(6).points.size();
 
@@ -231,14 +234,14 @@ public class DBApp implements DBAppInterface {
         // System.out.println(v.get(0).get("id"));
 
         // delete
-        // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        // htblColNameValue.put("id", new Integer(1));
-        // htblColNameValue.put("name", new String("B"));
-        // htblColNameValue.put("gpa", new Integer(1));
-        // // htblColNameValue.put("date", new
-        // // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
+        Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
+        htblColNameValue.put("id", new Integer(3));
+        htblColNameValue.put("name", new String("B"));
+        htblColNameValue.put("gpa", new Integer(1));
+        // htblColNameValue.put("date", new
+        // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
 
-        // dbApp.deleteFromTable("Teacher", htblColNameValue);
+        dbApp.deleteFromTable("Teacher", htblColNameValue);
 
         // when a record is deleted, values shift upwards leaving empty spaces in the
         // page from the bottom

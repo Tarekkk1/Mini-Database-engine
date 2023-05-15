@@ -113,9 +113,14 @@ public class deleteFromMethods {
 			Object y = columnNameValue.get(index.index2);
 			Object z = columnNameValue.get(index.index3);
 			RowReference refrances = root.find(x, y, z);
-			System.out.println(index.path);
-			// Vector<Hashtable<String, Object>> rows = new Vector<>();
 
+			System.out.println("her");
+			System.out.println(root.points.size());
+			System.out.println(x + " " + y + " " + z);
+			System.out.println(
+					refrances.x + " " + refrances.y + " " + refrances.z + " " + refrances.pageAndRow.get(0).page);
+			// Vector<Hashtable<String, Object>> rows = new Vector<>();
+			System.out.println(refrances.pageAndRow.size());
 			for (PageAndRow single : refrances.pageAndRow) {
 				int pageNumber = single.page;
 				Object cluster = single.clustringvalue;
