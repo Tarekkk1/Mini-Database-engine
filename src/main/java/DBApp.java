@@ -20,8 +20,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
-import javax.annotation.processing.SupportedOptions;
-
 public class DBApp implements DBAppInterface {
 
     public DBApp() {
@@ -131,14 +129,14 @@ public class DBApp implements DBAppInterface {
     }
 
     @Override
-    public void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue) throws Exception {
-        // try {
-        deleteFromMethods.deleteFromTable(tableName, columnNameValue);
+    public void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue) throws DBAppException {
+        try {
+            deleteFromMethods.deleteFromTable(tableName, columnNameValue);
 
-        // } catch (Exception e) {
+        } catch (Exception e) {
 
-        // throw new DBAppException("Error in delete");
-        // }
+            throw new DBAppException("Error in delete");
+        }
     }
 
     public Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators) throws DBAppException {
@@ -166,8 +164,8 @@ public class DBApp implements DBAppInterface {
 
         // Hashtable<String, String> htblColNameMin = new Hashtable<String, String>();
         // Hashtable<String, String> htblColNameMax = new Hashtable<String, String>();
-        // htblColNameMax.put("id", "10");
-        // htblColNameMax.put("name", "Z");
+        // htblColNameMax.put("id", "1000");
+        // htblColNameMax.put("name", "ZZZZZZZZZZ");
         // htblColNameMax.put("gpa", "4");
         // // htblColNameMax.put("date", "2021-01-01");
         // htblColNameMin.put("name", "A");
@@ -178,14 +176,15 @@ public class DBApp implements DBAppInterface {
         // htblColNameMax);
         /////////////////////////////
 
-        // createIndex("Teacher", new String[] { "id", "name", "gpa" });
+        
+        // createIndex("Teacher", new String[] {"id" , "name" , "gpa"});
 
         // insertions
-        Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        htblColNameValue.put("id", new Integer(3));
-        htblColNameValue.put("name", new String("B"));
-        htblColNameValue.put("gpa", new Integer(1));
-        dbApp.insertIntoTable("Teacher", htblColNameValue);
+        // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
+        // htblColNameValue.put("id", new Integer(2));
+        // htblColNameValue.put("name", new String("T"));
+        // htblColNameValue.put("gpa", new Integer(2));
+        // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // htblColNameValue.put("date", new
         // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
@@ -201,21 +200,7 @@ public class DBApp implements DBAppInterface {
         // objectIn.close();
         // fileIn.close();
 
-        // // System.out.println(v.children.get().points.size());
-
-        // // int number = v.children.get(2).children.get(6).points.size();
-
-        // // System.out.println(number);
-        // for (int i = 0; i < 8; i++) {
-        // // Node Childs =
-        // int number = v.children.get(i).points.size();
-        // System.out.println(number);
-
-        // }
-        // for (Node child : ) {
-        // System.out.println(child.children.size());
-
-        // }
+        // System.out.println(v.points.size());
 
         // search
 
@@ -233,8 +218,8 @@ public class DBApp implements DBAppInterface {
         // delete
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
         // htblColNameValue.put("id", new Integer(1));
-        // htblColNameValue.put("name", new String("B"));
-        // htblColNameValue.put("gpa", new Integer(1));
+        // // htblColNameValue.put("name", new String("T10"));
+        // // htblColNameValue.put("gpa", new Double(0.8));
         // // htblColNameValue.put("date", new
         // // SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
 
@@ -262,7 +247,7 @@ public class DBApp implements DBAppInterface {
         // objectIn.close();
         // fileIn.close();
 
-        // System.out.println(v.get(0).get("id"));
+        // System.out.println(v.get(1).get("id"));
 
     }
 
