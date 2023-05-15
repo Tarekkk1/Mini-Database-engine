@@ -33,7 +33,7 @@ public class Node implements Serializable {
             b.maxY = (i % 4 < 2) ? getMedian(boundaries.minY, boundaries.maxY) : boundaries.maxY;
             b.minZ = (i < 4) ? boundaries.minZ : getMedian(boundaries.minZ, boundaries.maxZ);
             b.maxZ = (i < 4) ? getMedian(boundaries.minZ, boundaries.maxZ) : boundaries.maxZ;
-            Node child = new Node(b, 2);// to be considered
+            Node child = new Node(b, maxPoints);// to be considered
             children.add(child);
         }
 
