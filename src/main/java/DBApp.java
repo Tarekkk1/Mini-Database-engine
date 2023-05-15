@@ -129,14 +129,14 @@ public class DBApp implements DBAppInterface {
     }
 
     @Override
-    public void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue) throws DBAppException {
-        try {
-            deleteFromMethods.deleteFromTable(tableName, columnNameValue);
+    public void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue) throws Exception {
+        // try {
+        deleteFromMethods.deleteFromTable(tableName, columnNameValue);
 
-        } catch (Exception e) {
+        // } catch (Exception e) {
 
-            throw new DBAppException("Error in delete");
-        }
+        // throw new DBAppException("Error in delete");
+        // }
     }
 
     public Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators) throws DBAppException {
@@ -177,6 +177,7 @@ public class DBApp implements DBAppInterface {
         /////////////////////////////
 
         // createIndex("Teacher", new String[] { "id", "name", "gpa" });
+        // createIndex("ahmed", new String[] { "ef", "dwl" });
 
         // insertions
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
@@ -186,15 +187,16 @@ public class DBApp implements DBAppInterface {
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // selectinon
-        SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 1);
-        SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "M");
-        SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 1);
+        // SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 1);
+        // SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "M");
+        // SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 1);
 
-        SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm2, sqlTerm3 };
-        String[] arrayOperators = new String[] { "AND", "AND" };
-        Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
+        // SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm2, sqlTerm3 };
+        // String[] arrayOperators = new String[] { "AND", "AND" };
+        // Iterator<Hashtable<String, Object>> iterator =
+        // selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
 
-        System.out.println(iterator.next());
+        // System.out.println(iterator.next());
 
         // // <1,2,3> page 0
         // <4,5,6> page 1
@@ -250,7 +252,7 @@ public class DBApp implements DBAppInterface {
 
         // delete
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        // htblColNameValue.put("id", new Integer(2));
+        // htblColNameValue.put("id", new Integer(1));
         // // htblColNameValue.put("name", new String("B"));
         // // htblColNameValue.put("gpa", new Integer(1));
         // //// htblColNameValue.put("date", new

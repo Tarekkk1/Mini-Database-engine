@@ -13,6 +13,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.management.ObjectName;
+import javax.swing.text.html.HTMLDocument.HTMLReader.TagAction;
 
 public class IndexMethods {
 
@@ -75,10 +76,48 @@ public class IndexMethods {
 
     }
 
+    public static void checkIndex(String path, String[] colName)
+            throws ClassNotFoundException, IOException, ParseException, DBAppException {
+
+        if (colName.length != 3)
+            throw new DBAppException("Error in input");
+        Table table = updateMethods.getTablefromCSV(path);
+
+        Object[] tableInfo = updateMethods.getTableInfoMeta(table.getTableName()); // info about table
+        Hashtable<String, String> colNames = (Hashtable<String, String>) tableInfo[0]; // column names
+        Vector<String> colNamesVector = new Vector<String>();
+
+        for (String key : colNames.keySet()) {
+            colNamesVector.add(key);
+        }
+        for (String key : colName) {
+            if (!colNamesVector.contains(key)) {
+
+                throw new DBAppException("Column Name Not Found");
+            }
+
+        }
+
+        if (table.indexs != null) {
+
+            for (Index i : table.indexs) {
+                if (i.index1.equals(colName[0]) || i.index2.equals(colName[0]) || i.index3.equals(colName[0]) ||
+                        i.index1.equals(colName[1]) || i.index2.equals(colName[1]) || i.index3.equals(colName[1]) ||
+                        i.index1.equals(colName[2]) || i.index2.equals(colName[2]) || i.index3.equals(colName[2])) {
+
+                    throw new DBAppException("Index already exists");
+
+                }
+            }
+        }
+
+    }
+
     public static void createIndex(String strTableName, String[] ColName)
             throws DBAppException, ClassNotFoundException, IOException, ParseException {
 
-        // to check if the input is correct
+        String tablePath = "src/main/resources/data/" + strTableName + ".ser";
+        checkIndex(tablePath, ColName);
 
         if (ColName.length != 3) {
             throw new DBAppException("Error in input");
@@ -166,6 +205,8 @@ public class IndexMethods {
             f.delete();
             String[] ColName = new String[] { index.index1, index.index2, index.index3
             };
+            table.indexs = null;
+
             deleteFromMethods.serialize(table, path);
             createIndex(strTableName, ColName);
 
