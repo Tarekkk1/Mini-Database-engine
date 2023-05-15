@@ -129,28 +129,28 @@ public class selectFromMethods {
     // return result;
     // }
 
-    public static Iterator selectFromTable(SQLTerm[] arrSQLTerms, String[] strarrOperators)
+    public static Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators)
             throws DBAppException, ClassNotFoundException, IOException, ParseException {
         Vector<Hashtable<String, Object>> iterator = new Vector<>();
-        validateSelectFromTable(arrSQLTerms, strarrOperators);
-        String tableName = arrSQLTerms[0].get_strTableName();
+        validateSelectFromTable(sqlTerms, arrayOperators);
+        String tableName = sqlTerms[0].get_strTableName();
         Table table = extractTable("src/main/resources/data/" + tableName + ".ser");
         int index = -1;
         for (Index indexTable : table.indexs) {
-            index = validateSelectonIndex(arrSQLTerms, strarrOperators, indexTable);
+            index = validateSelectonIndex(sqlTerms, arrayOperators, indexTable);
             if (index != -1)
                 break;
         }
 
         if (index != -1) {
-            Vector<RowReference> rowrefrance = useIndex(arrSQLTerms, strarrOperators, table, index);
+            Vector<RowReference> rowrefrance = useIndex(sqlTerms, arrayOperators, table, index);
             Vector<Hashtable<String, Object>> rows = getRowsFromRefarance(rowrefrance, table);
             for (Hashtable<String, Object> row : rows) {
 
-                Vector<Boolean> bool = selectHelper(arrSQLTerms, row);
+                Vector<Boolean> bool = selectHelper(sqlTerms, row);
                 Boolean b = bool.get(0);
                 for (int j = 1; j < bool.size(); j++) {
-                    switch (strarrOperators[j - 1]) {
+                    switch (arrayOperators[j - 1]) {
                         case "AND":
                             b = b & bool.get(j);
                             break;
@@ -175,10 +175,10 @@ public class selectFromMethods {
                 Vector<Hashtable<String, Object>> page = extractPage(path);
                 for (Hashtable<String, Object> row : page) {
 
-                    Vector<Boolean> bool = selectHelper(arrSQLTerms, row);
+                    Vector<Boolean> bool = selectHelper(sqlTerms, row);
                     Boolean b = bool.get(0);
                     for (int j = 1; j < bool.size(); j++) {
-                        switch (strarrOperators[j - 1]) {
+                        switch (arrayOperators[j - 1]) {
                             case "AND":
                                 b = b & bool.get(j);
                                 break;

@@ -164,8 +164,8 @@ public class DBApp implements DBAppInterface {
 
         // Hashtable<String, String> htblColNameMin = new Hashtable<String, String>();
         // Hashtable<String, String> htblColNameMax = new Hashtable<String, String>();
-        // htblColNameMax.put("id", "1000");
-        // htblColNameMax.put("name", "ZZZZZZZZZZ");
+        // htblColNameMax.put("id", "10");
+        // htblColNameMax.put("name", "Z");
         // htblColNameMax.put("gpa", "4");
         // // htblColNameMax.put("date", "2021-01-01");
         // htblColNameMin.put("name", "A");
@@ -176,16 +176,23 @@ public class DBApp implements DBAppInterface {
         // htblColNameMax);
         /////////////////////////////
 
-        // createIndex("Teacher", new String[] {"id" , "name" , "gpa"});
+        // createIndex("Teacher", new String[] { "id", "name", "gpa" });
 
         // insertions
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        // htblColNameValue.put("id", new Integer(2));
-        // htblColNameValue.put("name", new String("Y"));
+        // htblColNameValue.put("id", new Integer(1));
+        // htblColNameValue.put("name", new String("M"));
         // htblColNameValue.put("gpa", new Integer(1));
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
-        // dbApp.insertIntoTable("Teacher", htblColNameValue);
+        // selectinon
+        SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", ">", 1);
+
+        SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1 };
+        String[] arrayOperators = new String[] {};
+        Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
+
+        System.out.println(iterator.next());
 
         // // <1,2,3> page 0
         // <4,5,6> page 1
