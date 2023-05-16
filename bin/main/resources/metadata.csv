@@ -1,4 +1,0 @@
-Teacher,gpa,java.lang.Integer,False,idnamegpaIndex,Octree,0,4
-Teacher,date,java.util.Date,False,null,null,2020-01-01,2021-01-01
-Teacher,name,java.lang.String,False,idnamegpaIndex,Octree,A,Z
-Teacher,id,java.lang.Integer,True,idnamegpaIndex,Octree,0,10

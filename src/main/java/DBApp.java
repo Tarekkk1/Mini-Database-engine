@@ -148,7 +148,9 @@ public class DBApp implements DBAppInterface {
             Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
 
             return iterator;
-        } catch (Exception e) {
+        } catch (
+
+        Exception e) {
             throw new DBAppException("Error in select");
         }
 
@@ -198,15 +200,18 @@ public class DBApp implements DBAppInterface {
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // selectinon
-        SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 8);
-        SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "B");
-        SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 1);
-        SQLTerm sqlTerm4 = new SQLTerm("Teacher", "date", "=", new SimpleDateFormat("yyyy-MM-dd").parse("2020-04-01"));
+        // SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 9);
+        // SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "F");
+        // SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 2);
+        // SQLTerm sqlTerm4 = new SQLTerm("Teacher", "date", "=", new
+        // SimpleDateFormat("yyyy-MM-dd").parse("2020-04-01"));
 
-        SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm3, sqlTerm2, sqlTerm4 };
-        String[] arrayOperators = new String[] { "AND", "AND", "OR" };
-        Iterator<Hashtable<String, Object>> iterator = dbApp.selectFromTable(sqlTerms, arrayOperators);
-        System.out.println(iterator.next());
+        // SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm3, sqlTerm2, sqlTerm4
+        // };
+        // String[] arrayOperators = new String[] { "AND", "AND", "OR" };
+        // Iterator<Hashtable<String, Object>> iterator =
+        // dbApp.selectFromTable(sqlTerms, arrayOperators);
+        // System.out.println(iterator.next());
 
         // // // <1,2,3> page 0
         // <4,5,6> page 1

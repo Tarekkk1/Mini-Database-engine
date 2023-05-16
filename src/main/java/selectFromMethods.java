@@ -23,8 +23,11 @@ public class selectFromMethods {
         String tableName = sqlTerms[0].get_strTableName();
         Table table = extractTable("src/main/resources/data/" + tableName + ".ser");
         int index = -1;
-        for (Index indexTable : table.indexs) {
-            index = validateSelectonIndex(sqlTerms, arrayOperators, indexTable);
+        for (int i = 0; i < table.indexs.size(); i++) {
+            Index indexTable = table.indexs.get(i);
+            if (validateSelectonIndex(sqlTerms, arrayOperators, indexTable))
+                index = i;
+
             if (index != -1)
                 break;
         }
@@ -114,10 +117,11 @@ public class selectFromMethods {
             int number)
             throws IOException, ParseException, DBAppException, ClassNotFoundException {
 
+        System.out.println("i used index");
         Object[] tableInfo = updateMethods.getTableInfoMeta(table.getTableName());
         Hashtable<String, Object> columnMin = (Hashtable<String, Object>) tableInfo[1];
         Hashtable<String, Object> columnMax = (Hashtable<String, Object>) tableInfo[2];
-        // //.out.println("her");
+
         Index index = table.indexs.get(number);
         Object xMin = columnMin.get(index.index1);
         Object xMax = columnMax.get(index.index1);
@@ -206,7 +210,7 @@ public class selectFromMethods {
 
     }
 
-    private static int validateSelectonIndex(SQLTerm[] sqlTerm, String[] strarrOperators, Index index) {
+    private static boolean validateSelectonIndex(SQLTerm[] sqlTerm, String[] strarrOperators, Index index) {
         String index1 = index.index1;
         String index2 = index.index2;
         String index3 = index.index3;
@@ -221,11 +225,19 @@ public class selectFromMethods {
                     &&
                     (index3.equals(term3._strColumnName) || index3.equals(term2._strColumnName)
                             || index3.equals(term1._strColumnName)))
-                if (strarrOperators[i].equals("AND") && strarrOperators[i + 1].equals("AND"))
-                    return i;
+                if (strarrOperators[i].equals("AND") && strarrOperators[i + 1].equals("AND")) {
+                    Boolean f = true;
+
+                    for (int j = i; j < strarrOperators.length; j++) {
+                        if (strarrOperators[j].equals("OR"))
+                            f = false;
+                    }
+                    if (f)
+                        return true;
+                }
 
         }
-        return -1;
+        return false;
 
     }
 
