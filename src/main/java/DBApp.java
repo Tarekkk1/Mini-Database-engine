@@ -144,7 +144,13 @@ public class DBApp implements DBAppInterface {
     public Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators) throws DBAppException {
         // TODO Auto-generated method stub
         try {
-            return selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
+            Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
+            if (iterator.next() == null) {
+
+                throw new DBAppException("");
+            }
+
+            return iterator;
         } catch (Exception e) {
             throw new DBAppException("Error in select");
         }
@@ -195,14 +201,14 @@ public class DBApp implements DBAppInterface {
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // selectinon
-        SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 1);
+        SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 6);
         // SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "K");
-        SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 1);
-        SQLTerm sqlTerm4 = new SQLTerm("Teacher", "date", "=", new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
+        SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 3);
+        SQLTerm sqlTerm4 = new SQLTerm("Teacher", "date", "=", new SimpleDateFormat("yyyy-MM-dd").parse("2020-06-01"));
 
         SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm3, sqlTerm4 };
         String[] arrayOperators = new String[] { "AND", "AND" };
-        Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
+        Iterator<Hashtable<String, Object>> iterator = dbApp.selectFromTable(sqlTerms, arrayOperators);
         System.out.println(iterator.next());
 
         // // <1,2,3> page 0
@@ -259,7 +265,7 @@ public class DBApp implements DBAppInterface {
 
         // delete
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        // htblColNameValue.put("id", new Integer(1));
+        // htblColNameValue.put("id", new Integer(6));
         // // htblColNameValue.put("name", new String("B"));
         // // htblColNameValue.put("gpa", new Integer(1));
         // //// htblColNameValue.put("date", new
