@@ -200,15 +200,15 @@ public class DBApp implements DBAppInterface {
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // selectinon
-        // SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 9);
-        // SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "F");
-        // SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 2);
-        // SQLTerm sqlTerm4 = new SQLTerm("Teacher", "date", "=", new
-        // SimpleDateFormat("yyyy-MM-dd").parse("2020-04-01"));
+        // SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 1);
+        // // SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "F");
+        // // SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 2);
+        // // SQLTerm sqlTerm4 = new SQLTerm("Teacher", "date", "=", new
+        // // SimpleDateFormat("yyyy-MM-dd").parse("2020-04-01"));
 
-        // SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm3, sqlTerm2, sqlTerm4
+        // SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1
         // };
-        // String[] arrayOperators = new String[] { "AND", "AND", "OR" };
+        // String[] arrayOperators = new String[] {};
         // Iterator<Hashtable<String, Object>> iterator =
         // dbApp.selectFromTable(sqlTerms, arrayOperators);
         // System.out.println(iterator.next());
@@ -266,14 +266,14 @@ public class DBApp implements DBAppInterface {
         // System.out.println(v.get(0).get("id"));
 
         // delete
-        Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        htblColNameValue.put("id", new Integer(9));
-        // htblColNameValue.put("name", new String("B"));
-        // htblColNameValue.put("gpa", new Integer(1));
-        //// htblColNameValue.put("date", new
-        //// SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
+        // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
+        // htblColNameValue.put("id", new Integer(9));
+        // // htblColNameValue.put("name", new String("B"));
+        // // htblColNameValue.put("gpa", new Integer(1));
+        // //// htblColNameValue.put("date", new
+        // //// SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
 
-        dbApp.deleteFromTable("Teacher", htblColNameValue);
+        // dbApp.deleteFromTable("Teacher", htblColNameValue);
 
         // when a record is deleted, values shift upwards leaving empty spaces in the
         // page from the bottom
@@ -298,6 +298,12 @@ public class DBApp implements DBAppInterface {
         // fileIn.close();
 
         // System.out.println(v.get(0));
+
+        Bonus b = new Bonus();
+        StringBuffer s = new StringBuffer("SELECT * FROM Teacher WHERE id=1 AND name=A");
+
+        Iterator<Hashtable<String, Object>> iterator = Bonus.convertSql(s);
+        System.out.println(iterator.next());
 
     }
 
