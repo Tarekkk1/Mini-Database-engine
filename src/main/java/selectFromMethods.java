@@ -28,7 +28,9 @@ public class selectFromMethods {
         }
 
         if (index != -1) {
+            System.out.println("Using Index");
             Vector<RowReference> rowrefrance = useIndex(sqlTerms, arrayOperators, table, index);
+            System.out.println(rowrefrance.size());
             Vector<Hashtable<String, Object>> rows = getRowsFromRefarance(rowrefrance, table);
             for (Hashtable<String, Object> row : rows) {
 
@@ -174,10 +176,15 @@ public class selectFromMethods {
         }
         Vector<RowReference> result = new Vector<>();
         Index temp = table.indexs.get(number);
+        System.out.println(number + " " + "ana mafrood b 0");
 
         String indexPath = temp.path;
         Node root = updateMethods.getNodefromDisk(indexPath);
-        result.addAll(root.find(xMin, xMax, yMin, yMax, zMin, zMax));
+        System.out.println("root size" + root.points.size());
+        Vector<RowReference> test = root.find(xMin, xMax, yMin, yMax, zMin, zMax);
+        System.out.println("test size" + test.size());
+        System.out.println(xMin + " " + xMax + " " + yMin + " " + yMax + " " + zMin + " " + zMax);
+        result.addAll(test);
         return result;
 
     }

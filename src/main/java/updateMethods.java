@@ -55,9 +55,12 @@ public class updateMethods {
         objectOut.writeObject(page);
         objectOut.close();
         fileOut.close();
-        if (forIndex != null && IndexMethods.columnIndexs(forIndex, path) != null) {
-            String nodePath = "src/main/resources/data/" + tableName + "index.ser";
-            Node root = updateMethods.getNodefromDisk(nodePath);
+        int number = insertMethods.returnIndex("src/main/resources/data/" + table.getTableName() + ".ser",
+                forIndex);
+        if (forIndex != null && number != -1) {
+
+            Index index = table.indexs.get(number);
+            Node root = updateMethods.getNodefromDisk(index.path);
             Vector<Object> v = IndexMethods.columnIndexs(forIndex, path);
 
             root.deleteRowrefrance(v.get(0), v.get(1), v.get(2), pageNumber, forIndex.get(table.getClusteringKey()));
@@ -212,7 +215,7 @@ public class updateMethods {
     }
 
     public static Node getNodefromDisk(String path) throws IOException, ClassNotFoundException {
-        System.out.println(path);
+        // .out.println(path);
         FileInputStream fileIn = new FileInputStream(path);
 
         ObjectInputStream objectIn = new ObjectInputStream(fileIn);

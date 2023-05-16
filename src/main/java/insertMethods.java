@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import javax.security.cert.X509Certificate;
+import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 
 import java.text.ParseException;
@@ -249,6 +250,7 @@ public class insertMethods {
     static void insertIntoIndex(String tableName, int pageNumber,
             Hashtable<String, Object> colNameValue)
             throws ClassNotFoundException, IOException, ParseException, DBAppException {
+        System.out.println("insert into index");
 
         String path;
         path = "src/main/resources/data/" + tableName + ".ser";

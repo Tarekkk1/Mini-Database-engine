@@ -14,7 +14,7 @@ public class Node implements Serializable {
     public Node(Boundaries b, int maxPoints) {
         this.boundaries = b;
         this.children = new Vector<Node>(8);
-        this.points = new Vector<RowReference>(maxPoints + 1);
+        this.points = new Vector<RowReference>(maxPoints);
         this.maxPoints = maxPoints;
 
     }
@@ -40,7 +40,7 @@ public class Node implements Serializable {
         for (int i = 0; i < points.size(); i++) {
             RowReference point = points.get(i);
             int index = getChildNumber(point);
-            System.out.println(index);
+            // //.out.println(index);
             for (PageAndRow pg : point.pageAndRow) {
 
                 children.get(index).insert(pg.clustringvalue, pg.page, point.x, point.y, point.z);
@@ -204,7 +204,11 @@ public class Node implements Serializable {
                         if (point.pageAndRow.get(j).page == oldPage
                                 && updateMethods.check(point.pageAndRow.get(j).clustringvalue, clustringvalue) == 0) {
                             point.pageAndRow.remove(j);
-                            return;
+                            if (point.pageAndRow.size() == 0) {
+                                points.remove(i);
+                                i--;
+
+                            }
                         }
                     }
                 }
@@ -217,12 +221,15 @@ public class Node implements Serializable {
 
     public Vector<RowReference> find(Object minX, Object maxX, Object minY, Object maxY, Object minZ, Object maxZ) {
         Vector<RowReference> result = new Vector<RowReference>();
+        // .out.println("intered find");
         if (isLeaf()) {
             for (int i = 0; i < points.size(); i++) {
                 RowReference point = points.get(i);
+                // .out.println(point.x + " rrekec fmnag" + point.y + " " + point.z);
                 if (updateMethods.check(point.x, minX) >= 0 && updateMethods.check(point.x, maxX) <= 0
                         && updateMethods.check(point.y, minY) >= 0 && updateMethods.check(point.y, maxY) <= 0
                         && updateMethods.check(point.z, minZ) >= 0 && updateMethods.check(point.z, maxZ) <= 0) {
+                    // .out.println("intered check");
                     result.add(point);
                 }
             }
@@ -273,13 +280,13 @@ public class Node implements Serializable {
 
     public void print() {
         if (isLeaf()) {
-            System.out.println("Leaf");
+            // .out.println("Leaf");
             for (int i = 0; i < points.size(); i++) {
                 RowReference point = points.get(i);
-                System.out.println(point.x + " " + point.y + " " + point.z);
+                // .out.println(point.x + " " + point.y + " " + point.z);
             }
         } else {
-            System.out.println("Node");
+            // .out.println("Node");
             for (int i = 0; i < children.size(); i++) {
                 Node child = children.get(i);
                 child.print();
@@ -288,14 +295,16 @@ public class Node implements Serializable {
     }
 
     public void printBoundaries() {
-        System.out.println("minX: " + boundaries.minX + " maxX: " + boundaries.maxX + " minY: " + boundaries.minY
-                + " maxY: " + boundaries.maxY + " minZ: " + boundaries.minZ + " maxZ: " + boundaries.maxZ);
+        // .out.println("minX: " + boundaries.minX + " maxX: " + boundaries.maxX + "
+        // minY: " + boundaries.minY
+        // + " maxY: " + boundaries.maxY + " minZ: " + boundaries.minZ + " maxZ: " +
+        // boundaries.maxZ);
     }
 
     public void printPoints() {
         for (int i = 0; i < points.size(); i++) {
             RowReference point = points.get(i);
-            System.out.println(point.x + " " + point.y + " " + point.z);
+            // .out.println(point.x + " " + point.y + " " + point.z);
         }
     }
 

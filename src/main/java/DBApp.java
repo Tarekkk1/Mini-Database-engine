@@ -120,12 +120,12 @@ public class DBApp implements DBAppInterface {
     @Override
     public void updateTable(String tableName, String clusteringKeyValue,
             Hashtable<String, Object> columnNameValue)
-            throws DBAppException {
-        try {
-            updateMethods.updateTable(tableName, clusteringKeyValue, columnNameValue);
-        } catch (Exception e) {
-            throw new DBAppException("Error in update");
-        }
+            throws DBAppException, ClassNotFoundException, IOException, ParseException {
+        // try {
+        updateMethods.updateTable(tableName, clusteringKeyValue, columnNameValue);
+        // } catch (Exception e) {
+        // throw new DBAppException("Error in update");
+        // }
     }
 
     @Override
@@ -156,7 +156,7 @@ public class DBApp implements DBAppInterface {
 
     public static void main(String[] args) throws Exception {
         DBApp dbApp = new DBApp();
-        // Hashtable<String, String> htblColNameType = new Hashtable<String, String>();
+        Hashtable<String, String> htblColNameType = new Hashtable<String, String>();
         // htblColNameType.put("id", "java.lang.Integer");
         // htblColNameType.put("name", "java.lang.String");
         // // htblColNameType.put("date", "java.util.Date");
@@ -187,16 +187,15 @@ public class DBApp implements DBAppInterface {
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // selectinon
-        // SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 1);
-        // SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "M");
-        // SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 1);
+        SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 1);
+        SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "K");
+        SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 1);
 
-        // SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm2, sqlTerm3 };
-        // String[] arrayOperators = new String[] { "AND", "AND" };
-        // Iterator<Hashtable<String, Object>> iterator =
-        // selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
+        SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm2, sqlTerm3 };
+        String[] arrayOperators = new String[] { "AND", "AND" };
+        Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
 
-        // System.out.println(iterator.next());
+        System.out.println(iterator.next());
 
         // // <1,2,3> page 0
         // <4,5,6> page 1
@@ -208,7 +207,7 @@ public class DBApp implements DBAppInterface {
         // objectIn.close();
         // fileIn.close();
 
-        // System.out.println(v.points.size());
+        // System.out.println(v.points.get(0).pageAndRow.get(0).clustringvalue);
 
         // for (RowReference r : v.points) {
         // System.out.println(r.pageAndRow.get(0).page);
@@ -266,12 +265,12 @@ public class DBApp implements DBAppInterface {
 
         // update
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        // htblColNameValue.put("name", new String("T10"));
+        // htblColNameValue.put("name", new String("K"));
         // // htblColNameValue.put("gpa", new Double(0.8));
-        // htblColNameValue.put("date", new
-        // SimpleDateFormat("yyyy-MM-dd").parse("2020-06-01"));
+        // // htblColNameValue.put("date", new
+        // // SimpleDateFormat("yyyy-MM-dd").parse("2020-06-01"));
 
-        // dbApp.updateTable("Teacher", "10", htblColNameValue);
+        // dbApp.updateTable("Teacher", "1", htblColNameValue);
 
         // // //select
         // FileInputStream fileIn = new
@@ -282,7 +281,7 @@ public class DBApp implements DBAppInterface {
         // objectIn.close();
         // fileIn.close();
 
-        // System.out.println(v.get(1).get("id"));
+        // System.out.println(v.get(0));
 
     }
 

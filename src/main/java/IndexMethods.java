@@ -31,7 +31,7 @@ public class IndexMethods {
 
         do {
             boolean inserted = false;
-            System.out.println(line);
+            // .out.println(line);
 
             String arr[] = line.split(",");
             for (int i = 0; i < columns.length; i++) {

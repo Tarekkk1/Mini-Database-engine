@@ -17,7 +17,7 @@ public interface DBAppInterface {
                         throws DBAppException, ClassNotFoundException, IOException, ParseException, Exception;
 
         void updateTable(String tableName, String clusteringKeyValue, Hashtable<String, Object> columnNameValue)
-                        throws DBAppException;
+                        throws DBAppException, ClassNotFoundException, IOException, ParseException;
 
         void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue)
                         throws DBAppException, Exception;
