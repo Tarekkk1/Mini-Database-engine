@@ -183,9 +183,9 @@ public class DBApp implements DBAppInterface {
         // htblColNameMin.put("id", "0");
         // dbApp.createTable("Teacher", "id", htblColNameType, htblColNameMin,
         // htblColNameMax);
-        /////////////////////////////
+        // /////////////////////////////
 
-        // dbApp.createIndex("Teacher", new String[] { "id", "date", "gpa" });
+        // dbApp.createIndex("Teacher", new String[] { "id", "name", "gpa" });
         // createIndex("ahmed", new String[] { "ef", "dwl" });
 
         // insertions
@@ -209,7 +209,7 @@ public class DBApp implements DBAppInterface {
         Iterator<Hashtable<String, Object>> iterator = dbApp.selectFromTable(sqlTerms, arrayOperators);
         System.out.println(iterator.next());
 
-        // // <1,2,3> page 0
+        // // // <1,2,3> page 0
         // <4,5,6> page 1
 
         // FileInputStream fileIn = new
