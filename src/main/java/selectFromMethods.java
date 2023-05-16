@@ -29,7 +29,7 @@ public class selectFromMethods {
         }
 
         if (index != -1) {
-
+            System.out.println(index);
             Vector<RowReference> rowrefrance = useIndex(sqlTerms, arrayOperators, table, index);
 
             Vector<Hashtable<String, Object>> rows = getRowsFromRefarance(rowrefrance, table);
@@ -195,9 +195,9 @@ public class selectFromMethods {
             SQLTerm term1 = sqlTerm[i];
             SQLTerm term2 = sqlTerm[i + 1];
             SQLTerm term3 = sqlTerm[i + 2];
-            if ((term1.equals(term3) || term1.equals(term2) || term1.equals(term1)) &&
-                    (term2.equals(term3) || term2.equals(term2) || term2.equals(term1)) &&
-                    (term3.equals(term3) || term3.equals(term2) || term3.equals(term1)))
+            if ((index1.equals(term3) || index1.equals(term2) || index1.equals(term1)) &&
+                    (index2.equals(term3) || index2.equals(term2) || index2.equals(term1)) &&
+                    (index3.equals(term3) || index3.equals(term2) || index3.equals(term1)))
                 if (strarrOperators[i].equals("AND") && strarrOperators[i + 1].equals("AND"))
                     return i;
 

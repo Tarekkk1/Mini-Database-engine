@@ -141,14 +141,11 @@ public class DBApp implements DBAppInterface {
         }
     }
 
-    public Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators) throws DBAppException {
+    public Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators)
+            throws DBAppException {
         // TODO Auto-generated method stub
         try {
             Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
-            if (iterator.next() == null) {
-
-                throw new DBAppException("");
-            }
 
             return iterator;
         } catch (Exception e) {
@@ -201,12 +198,13 @@ public class DBApp implements DBAppInterface {
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // selectinon
-        SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 6);
-        // SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "K");
-        SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 3);
-        SQLTerm sqlTerm4 = new SQLTerm("Teacher", "date", "=", new SimpleDateFormat("yyyy-MM-dd").parse("2020-06-01"));
+        SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 8);
+        SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "B");
+        SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 1);
+        // SQLTerm sqlTerm4 = new SQLTerm("Teacher", "date", "=", new
+        // SimpleDateFormat("yyyy-MM-dd").parse("2020-04-01"));
 
-        SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm3, sqlTerm4 };
+        SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm3, sqlTerm2 };
         String[] arrayOperators = new String[] { "AND", "AND" };
         Iterator<Hashtable<String, Object>> iterator = dbApp.selectFromTable(sqlTerms, arrayOperators);
         System.out.println(iterator.next());
