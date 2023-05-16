@@ -23,7 +23,7 @@ public interface DBAppInterface {
                         throws DBAppException;
 
         Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators)
-                        throws DBAppException;
+                        throws DBAppException, ClassNotFoundException, IOException, ParseException;
 
         void createIndex(String strTableName, String[] ColName) throws DBAppException;
 }

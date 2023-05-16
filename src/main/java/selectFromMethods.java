@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
@@ -28,7 +29,9 @@ public class selectFromMethods {
                 break;
         }
         if (index != -1) {
-            Vector<RowReference> rowrefrance = useIndex(sqlTerms, arrayOperators, table, index);
+            SQLTerm[] filterSqlTerm = filter(sqlTerms, index, table);
+
+            Vector<RowReference> rowrefrance = useIndex(filterSqlTerm, arrayOperators, table, index);
 
             Vector<Hashtable<String, Object>> rows = getRowsFromRefarance(rowrefrance, table);
             for (Hashtable<String, Object> row : rows) {
@@ -86,6 +89,24 @@ public class selectFromMethods {
             }
         }
         return iterator.iterator();
+
+    }
+
+    private static SQLTerm[] filter(SQLTerm[] sqlTerms, int index, Table table) {
+
+        Index indecice = table.indexs.get(index);
+        SQLTerm[] returned = new SQLTerm[] {};
+        for (int i = 0; i < sqlTerms.length; i++) {
+            SQLTerm term = sqlTerms[i];
+            if (term._strColumnName.equals(indecice.index1) || term._strColumnName.equals(indecice.index2)
+                    || term._strColumnName.equals(indecice.index3)) {
+                returned = Arrays.copyOf(returned, returned.length + 1);
+                returned[returned.length - 1] = new SQLTerm(term._strTableName, term._strColumnName, term._strOperator,
+                        term._objValue);
+            }
+
+        }
+        return returned;
 
     }
 
