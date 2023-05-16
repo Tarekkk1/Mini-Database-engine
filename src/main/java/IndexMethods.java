@@ -157,7 +157,8 @@ public class IndexMethods {
                 Object x = records.get(j).get(ColName[0]);
                 Object y = records.get(j).get(ColName[1]);
                 Object z = records.get(j).get(ColName[2]);
-                root.insert(records.get(j).get(table.getClusteringKey()), i, x, y, z);
+                if (x != null && y != null && z != null)
+                    root.insert(records.get(j).get(table.getClusteringKey()), i, x, y, z);
             }
         }
 

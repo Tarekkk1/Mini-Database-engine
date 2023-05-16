@@ -142,15 +142,15 @@ public class DBApp implements DBAppInterface {
     }
 
     public Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators)
-            throws DBAppException, ClassNotFoundException, IOException, ParseException {
+            throws DBAppException {
         // TODO Auto-generated method stub
-        // try {
-        Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
+        try {
+            Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
 
-        return iterator;
-        // } catch (Exception e) {
-        // throw new DBAppException("Error in select");
-        // }
+            return iterator;
+        } catch (Exception e) {
+            throw new DBAppException("Error in select");
+        }
 
     }
 
