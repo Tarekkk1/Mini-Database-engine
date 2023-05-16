@@ -111,32 +111,34 @@ public class DBApp implements DBAppInterface {
 
     @Override
     public void insertIntoTable(String tableName, Hashtable<String, Object> colNameValue)
-            throws ClassNotFoundException, DBAppException, IOException, ParseException, Exception {
-
-        insertMethods.insertIntoTable(tableName, colNameValue);
-
+            throws DBAppException {
+        try {
+            insertMethods.insertIntoTable(tableName, colNameValue);
+        } catch (Exception e) {
+            throw new DBAppException("Error in insert");
+        }
     }
 
     @Override
     public void updateTable(String tableName, String clusteringKeyValue,
             Hashtable<String, Object> columnNameValue)
-            throws DBAppException, ClassNotFoundException, IOException, ParseException {
-        // try {
-        updateMethods.updateTable(tableName, clusteringKeyValue, columnNameValue);
-        // } catch (Exception e) {
-        // throw new DBAppException("Error in update");
-        // }
+            throws DBAppException {
+        try {
+            updateMethods.updateTable(tableName, clusteringKeyValue, columnNameValue);
+        } catch (Exception e) {
+            throw new DBAppException("Error in update");
+        }
     }
 
     @Override
-    public void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue) throws Exception {
-        // try {
-        deleteFromMethods.deleteFromTable(tableName, columnNameValue);
+    public void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue) throws DBAppException {
+        try {
+            deleteFromMethods.deleteFromTable(tableName, columnNameValue);
 
-        // } catch (Exception e) {
+        } catch (Exception e) {
 
-        // throw new DBAppException("Error in delete");
-        // }
+            throw new DBAppException("Error in delete");
+        }
     }
 
     public Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators) throws DBAppException {
@@ -149,17 +151,21 @@ public class DBApp implements DBAppInterface {
 
     }
 
-    public static void createIndex(String strTableName, String[] ColName)
-            throws DBAppException, ClassNotFoundException, IOException, ParseException {
-        IndexMethods.createIndex(strTableName, ColName);
+    public void createIndex(String strTableName, String[] ColName)
+            throws DBAppException {
+        try {
+            IndexMethods.createIndex(strTableName, ColName);
+        } catch (Exception e) {
+            throw new DBAppException("Error in create index");
+        }
     }
 
     public static void main(String[] args) throws Exception {
         DBApp dbApp = new DBApp();
-        Hashtable<String, String> htblColNameType = new Hashtable<String, String>();
+        // Hashtable<String, String> htblColNameType = new Hashtable<String, String>();
         // htblColNameType.put("id", "java.lang.Integer");
         // htblColNameType.put("name", "java.lang.String");
-        // // htblColNameType.put("date", "java.util.Date");
+        // htblColNameType.put("date", "java.util.Date");
         // htblColNameType.put("gpa", "java.lang.Integer");
 
         // Hashtable<String, String> htblColNameMin = new Hashtable<String, String>();
@@ -167,51 +173,53 @@ public class DBApp implements DBAppInterface {
         // htblColNameMax.put("id", "10");
         // htblColNameMax.put("name", "Z");
         // htblColNameMax.put("gpa", "4");
-        // // htblColNameMax.put("date", "2021-01-01");
+        // htblColNameMax.put("date", "2021-01-01");
         // htblColNameMin.put("name", "A");
-        // // htblColNameMin.put("date", "2020-01-01");
+        // htblColNameMin.put("date", "2020-01-01");
         // htblColNameMin.put("gpa", "0");
         // htblColNameMin.put("id", "0");
         // dbApp.createTable("Teacher", "id", htblColNameType, htblColNameMin,
         // htblColNameMax);
         /////////////////////////////
 
-        // createIndex("Teacher", new String[] { "id", "name", "gpa" });
+        // dbApp.createIndex("Teacher", new String[] { "id", "date", "gpa" });
         // createIndex("ahmed", new String[] { "ef", "dwl" });
 
         // insertions
         // Hashtable<String, Object> htblColNameValue = new Hashtable<String, Object>();
-        // htblColNameValue.put("id", new Integer(1));
-        // htblColNameValue.put("name", new String("M"));
+        // htblColNameValue.put("id", new Integer(8));
+        // htblColNameValue.put("name", new String("B"));
         // htblColNameValue.put("gpa", new Integer(1));
+        // htblColNameValue.put("date", new
+        // SimpleDateFormat("yyyy-MM-dd").parse("2020-04-01"));
         // dbApp.insertIntoTable("Teacher", htblColNameValue);
 
         // selectinon
         SQLTerm sqlTerm1 = new SQLTerm("Teacher", "id", "=", 1);
-        SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "K");
+        // SQLTerm sqlTerm2 = new SQLTerm("Teacher", "name", "=", "K");
         SQLTerm sqlTerm3 = new SQLTerm("Teacher", "gpa", "=", 1);
+        SQLTerm sqlTerm4 = new SQLTerm("Teacher", "date", "=", new SimpleDateFormat("yyyy-MM-dd").parse("2020-05-01"));
 
-        SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm2, sqlTerm3 };
+        SQLTerm[] sqlTerms = new SQLTerm[] { sqlTerm1, sqlTerm3, sqlTerm4 };
         String[] arrayOperators = new String[] { "AND", "AND" };
         Iterator<Hashtable<String, Object>> iterator = selectFromMethods.selectFromTable(sqlTerms, arrayOperators);
-
         System.out.println(iterator.next());
 
         // // <1,2,3> page 0
         // <4,5,6> page 1
 
         // FileInputStream fileIn = new
-        // FileInputStream("src/main/resources/data/Teacheridnamegpa.ser");
+        // FileInputStream("src/main/resources/data/Teacheriddategpa.ser");
         // ObjectInputStream objectIn = new ObjectInputStream(fileIn);
         // Node v = (Node) objectIn.readObject();
         // objectIn.close();
         // fileIn.close();
 
-        // System.out.println(v.points.get(0).pageAndRow.get(0).clustringvalue);
+        // // System.out.println(v.point);
 
-        // for (RowReference r : v.points) {
-        // System.out.println(r.pageAndRow.get(0).page);
-        // }
+        // // for (RowReference r : v.points) {
+        // // System.out.println(r.pageAndRow.get(0).page);
+        // // }
 
         // for (int i = 0; i < 8; i++) {
         // // Node Childs =

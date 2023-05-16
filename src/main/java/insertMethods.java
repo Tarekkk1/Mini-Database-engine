@@ -250,7 +250,7 @@ public class insertMethods {
     static void insertIntoIndex(String tableName, int pageNumber,
             Hashtable<String, Object> colNameValue)
             throws ClassNotFoundException, IOException, ParseException, DBAppException {
-        System.out.println("insert into index");
+        // .out.println("insert into index");
 
         String path;
         path = "src/main/resources/data/" + tableName + ".ser";
@@ -265,7 +265,7 @@ public class insertMethods {
         Object z = values.get(2);
         Index index = table.indexs.get(returnIndex(path, colNameValue));
         String indexPath = index.path;
-        // System.out.println(indexPath);
+        // //.out.println(indexPath);
 
         Node root = updateMethods.getNodefromDisk(indexPath);
 

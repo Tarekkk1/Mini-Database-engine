@@ -14,15 +14,15 @@ public interface DBAppInterface {
                         throws DBAppException;
 
         void insertIntoTable(String tableName, Hashtable<String, Object> colNameValue)
-                        throws DBAppException, ClassNotFoundException, IOException, ParseException, Exception;
+                        throws DBAppException;
 
         void updateTable(String tableName, String clusteringKeyValue, Hashtable<String, Object> columnNameValue)
-                        throws DBAppException, ClassNotFoundException, IOException, ParseException;
+                        throws DBAppException;
 
         void deleteFromTable(String tableName, Hashtable<String, Object> columnNameValue)
-                        throws DBAppException, Exception;
+                        throws DBAppException;
 
-        // Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators) throws
-        // DBAppException;
+        Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators) throws DBAppException;
 
+        void createIndex(String strTableName, String[] ColName) throws DBAppException;
 }

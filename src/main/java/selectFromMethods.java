@@ -17,6 +17,7 @@ public class selectFromMethods {
     public static Iterator selectFromTable(SQLTerm[] sqlTerms, String[] arrayOperators)
             throws DBAppException, ClassNotFoundException, IOException, ParseException {
         Vector<Hashtable<String, Object>> iterator = new Vector<>();
+
         validateSelectFromTable(sqlTerms, arrayOperators);
         String tableName = sqlTerms[0].get_strTableName();
         Table table = extractTable("src/main/resources/data/" + tableName + ".ser");
@@ -28,9 +29,9 @@ public class selectFromMethods {
         }
 
         if (index != -1) {
-            System.out.println("Using Index");
+
             Vector<RowReference> rowrefrance = useIndex(sqlTerms, arrayOperators, table, index);
-            System.out.println(rowrefrance.size());
+
             Vector<Hashtable<String, Object>> rows = getRowsFromRefarance(rowrefrance, table);
             for (Hashtable<String, Object> row : rows) {
 
@@ -97,7 +98,7 @@ public class selectFromMethods {
         Object[] tableInfo = updateMethods.getTableInfoMeta(table.getTableName());
         Hashtable<String, Object> columnMin = (Hashtable<String, Object>) tableInfo[1];
         Hashtable<String, Object> columnMax = (Hashtable<String, Object>) tableInfo[2];
-        // System.out.println("her");
+        // //.out.println("her");
         Index index = table.indexs.get(number);
         Object xMin = columnMin.get(index.index1);
         Object xMax = columnMax.get(index.index1);
@@ -106,7 +107,7 @@ public class selectFromMethods {
         Object zMin = columnMin.get(index.index3);
         Object zMax = columnMax.get(index.index3);
         for (SQLTerm term : arrSQLTerms) {
-            System.out.println(term._strColumnName);
+            // .out.println(term._strColumnName);
             String col = term._strColumnName;
             String operator = term._strOperator;
             Object value = term._objValue;
@@ -176,14 +177,11 @@ public class selectFromMethods {
         }
         Vector<RowReference> result = new Vector<>();
         Index temp = table.indexs.get(number);
-        System.out.println(number + " " + "ana mafrood b 0");
 
         String indexPath = temp.path;
         Node root = updateMethods.getNodefromDisk(indexPath);
-        System.out.println("root size" + root.points.size());
         Vector<RowReference> test = root.find(xMin, xMax, yMin, yMax, zMin, zMax);
-        System.out.println("test size" + test.size());
-        System.out.println(xMin + " " + xMax + " " + yMin + " " + yMax + " " + zMin + " " + zMax);
+
         result.addAll(test);
         return result;
 

@@ -221,11 +221,10 @@ public class Node implements Serializable {
 
     public Vector<RowReference> find(Object minX, Object maxX, Object minY, Object maxY, Object minZ, Object maxZ) {
         Vector<RowReference> result = new Vector<RowReference>();
-        // .out.println("intered find");
+
         if (isLeaf()) {
             for (int i = 0; i < points.size(); i++) {
                 RowReference point = points.get(i);
-                // .out.println(point.x + " rrekec fmnag" + point.y + " " + point.z);
                 if (updateMethods.check(point.x, minX) >= 0 && updateMethods.check(point.x, maxX) <= 0
                         && updateMethods.check(point.y, minY) >= 0 && updateMethods.check(point.y, maxY) <= 0
                         && updateMethods.check(point.z, minZ) >= 0 && updateMethods.check(point.z, maxZ) <= 0) {
@@ -237,17 +236,20 @@ public class Node implements Serializable {
         } else {
             for (int i = 0; i < children.size(); i++) {
                 Node child = children.get(i);
-                if (updateMethods.check(child.boundaries.minX, minX) >= 0
-                        && updateMethods.check(child.boundaries.maxX, maxX) <= 0
-                        && updateMethods.check(child.boundaries.minY, minY) >= 0
-                        && updateMethods.check(child.boundaries.maxY, maxY) <= 0
-                        && updateMethods.check(child.boundaries.minZ, minZ) >= 0
-                        && updateMethods.check(child.boundaries.maxZ, maxZ) <= 0) {
-                    result.addAll(child.find(minX, maxX, minY, maxY, minZ, maxZ));
+
+                if (updateMethods.check(minX, child.boundaries.minX) >= 0
+                        && updateMethods.check(maxX, child.boundaries.maxX) <= 0
+                        && updateMethods.check(minY, child.boundaries.minY) >= 0
+                        && updateMethods.check(maxY, child.boundaries.maxY) <= 0
+                        && updateMethods.check(minZ, child.boundaries.minZ) >= 0
+                        && updateMethods.check(maxZ, child.boundaries.maxZ) <= 0) {
+
+                    return child.find(minX, maxX, minY, maxY, minZ, maxZ);
                 }
             }
-            return result;
         }
+        return null;
+
     }
 
     public RowReference delete(Object minX, Object maxX, Object minY, Object maxY, Object minZ, Object maxZ) {
@@ -265,12 +267,12 @@ public class Node implements Serializable {
         } else {
             for (int i = 0; i < children.size(); i++) {
                 Node child = children.get(i);
-                if (updateMethods.check(child.boundaries.minX, minX) >= 0
-                        && updateMethods.check(child.boundaries.maxX, maxX) <= 0
-                        && updateMethods.check(child.boundaries.minY, minY) >= 0
-                        && updateMethods.check(child.boundaries.maxY, maxY) <= 0
-                        && updateMethods.check(child.boundaries.minZ, minZ) >= 0
-                        && updateMethods.check(child.boundaries.maxZ, maxZ) <= 0) {
+                if (updateMethods.check(minX, child.boundaries.minX) >= 0
+                        && updateMethods.check(maxX, child.boundaries.maxX) <= 0
+                        && updateMethods.check(minY, child.boundaries.minY) >= 0
+                        && updateMethods.check(maxY, child.boundaries.maxY) <= 0
+                        && updateMethods.check(minZ, child.boundaries.minZ) >= 0
+                        && updateMethods.check(maxZ, child.boundaries.maxZ) <= 0) {
                     return child.delete(minX, maxX, minY, maxY, minZ, maxZ);
                 }
             }
