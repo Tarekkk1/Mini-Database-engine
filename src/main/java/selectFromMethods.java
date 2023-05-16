@@ -117,7 +117,6 @@ public class selectFromMethods {
             int number)
             throws IOException, ParseException, DBAppException, ClassNotFoundException {
 
-        System.out.println("i used index");
         Object[] tableInfo = updateMethods.getTableInfoMeta(table.getTableName());
         Hashtable<String, Object> columnMin = (Hashtable<String, Object>) tableInfo[1];
         Hashtable<String, Object> columnMax = (Hashtable<String, Object>) tableInfo[2];

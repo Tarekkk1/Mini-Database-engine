@@ -225,7 +225,6 @@ public class deleteFromMethods {
 				String nodePath = index.path;
 				Node root = updateMethods.getNodefromDisk(nodePath);
 				Vector<Object> v = IndexMethods.columnIndexs(forIndex, path);
-
 				root.deleteRowrefrance(v.get(0), v.get(1), v.get(2), pageNumber,
 						forIndex.get(table.getClusteringKey()));
 				deleteFromMethods.serialize(root, nodePath);

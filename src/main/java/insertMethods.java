@@ -265,7 +265,6 @@ public class insertMethods {
         Object z = values.get(2);
         Index index = table.indexs.get(returnIndex(path, colNameValue));
         String indexPath = index.path;
-        // //.out.println(indexPath);
 
         Node root = updateMethods.getNodefromDisk(indexPath);
 

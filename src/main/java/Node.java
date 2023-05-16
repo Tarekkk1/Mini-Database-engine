@@ -195,12 +195,15 @@ public class Node implements Serializable {
     }
 
     public void deleteRowrefrance(Object x, Object y, Object z, int oldPage, Object clustringvalue) {
+
         if (isLeaf()) {
             for (int i = 0; i < points.size(); i++) {
                 RowReference point = points.get(i);
+
                 if (updateMethods.check(point.x, x) == 0 && updateMethods.check(point.y, y) == 0
                         && updateMethods.check(point.z, z) == 0) {
                     for (int j = 0; j < point.pageAndRow.size(); j++) {
+
                         if (point.pageAndRow.get(j).page == oldPage
                                 && updateMethods.check(point.pageAndRow.get(j).clustringvalue, clustringvalue) == 0) {
                             point.pageAndRow.remove(j);
@@ -228,7 +231,6 @@ public class Node implements Serializable {
                 if (updateMethods.check(point.x, minX) >= 0 && updateMethods.check(point.x, maxX) <= 0
                         && updateMethods.check(point.y, minY) >= 0 && updateMethods.check(point.y, maxY) <= 0
                         && updateMethods.check(point.z, minZ) >= 0 && updateMethods.check(point.z, maxZ) <= 0) {
-                    // .out.println("intered check");
                     result.add(point);
                 }
             }

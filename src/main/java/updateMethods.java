@@ -59,12 +59,18 @@ public class updateMethods {
                 forIndex);
         if (forIndex != null && number != -1) {
 
-            Index index = table.indexs.get(number);
-            Node root = updateMethods.getNodefromDisk(index.path);
-            Vector<Object> v = IndexMethods.columnIndexs(forIndex, path);
+            // System.out.println("herrrrr");
+            // Index index = table.indexs.get(number);
+            // Node root = updateMethods.getNodefromDisk(index.path);
+            // Vector<Object> v = IndexMethods.columnIndexs(forIndex, path);
 
-            root.deleteRowrefrance(v.get(0), v.get(1), v.get(2), pageNumber, forIndex.get(table.getClusteringKey()));
-            insertMethods.insertIntoIndex(tableName, pageNumber, forIndex2);
+            // root.deleteRowrefrance(v.get(0), v.get(1), v.get(2), pageNumber,
+            // forIndex.get(table.getClusteringKey()));
+            // deleteFromMethods.serialize(root, index.path);
+            // // System.out.println(forIndex2);
+            // insertMethods.insertIntoIndex(tableName, pageNumber, forIndex2);
+            // deleteFromMethods.serialize(root, index.path);
+            IndexMethods.updateIndex(tableName);
 
         }
 
